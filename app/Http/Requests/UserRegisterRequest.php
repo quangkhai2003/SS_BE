@@ -11,7 +11,7 @@ class UserRegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,6 +26,18 @@ class UserRegisterRequest extends FormRequest
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'username.required' => 'Tên người dùng là bắt buộc.',
+            'username.unique' => 'Tên người dùng đã tồn tại.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.unique' => 'Email Meo Meo đã tồn tại.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
         ];
     }
 }

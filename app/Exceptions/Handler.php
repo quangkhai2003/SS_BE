@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,7 +25,17 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            return false;
         });
+    }
+    public function render($request, Throwable $e)
+    {
+        // Xử lý lỗi ValidationException (trả về phản hồi cho người dùng)
+        if ($e instanceof ValidationException) {
+            $message = 'Đăng ký không thành công.';
+            return response()->json([
+                'message' => $message,
+            ], 422);
+        }
     }
 }
