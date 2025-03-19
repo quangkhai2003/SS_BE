@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // Khóa chính, tự động tăng
+            $table->id('user_id'); // Khóa chính, tự động tăng
             $table->string('username')->unique()->index(); // Tên đăng nhập, có thể null, thêm index
             $table->string('password'); // Lưu mật khẩu đã hash
             $table->string('full_name'); // Tên đầy đủ

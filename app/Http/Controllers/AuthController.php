@@ -6,11 +6,8 @@ use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\UserLoginResourse;
 use App\Http\Resources\UserResgisterResourse;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Services\UserService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -41,7 +38,6 @@ class AuthController extends Controller
         // Tìm user theo email
         $user = $this->userService->login($request->validated());
         return UserLoginResourse::make($user);
-    
     }
     public function user() {
         return "Hello User";

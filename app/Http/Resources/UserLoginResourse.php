@@ -14,6 +14,11 @@ class UserLoginResourse extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if (!$this->resource) {
+            return [
+                'message' => 'Không tìm thấy người dùng hoặc thông tin đăng nhập không đúng.',
+            ];
+        }
         return [
             'username' => $this->username,
             'full_name' => $this->full_name,
