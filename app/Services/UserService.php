@@ -15,7 +15,14 @@ class UserService
             'password' => Hash::make($data['password']),
         ]);
     }
-
+    public function login(array $data)
+    {
+        $user = User::where('email', $data['email'])->first();
+        if ($user && Hash::check($data['password'], $user->password)) {
+            return $user;
+        }
+        return false;
+    }
     public function find($id)
     {
         return User::findOrFail($id);

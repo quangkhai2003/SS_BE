@@ -35,7 +35,7 @@ class UserRegisterRequest extends FormRequest
             'username.unique' => 'Tên người dùng đã tồn tại.',
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Email không hợp lệ.',
-            'email.unique' => 'Email Meo Meo đã tồn tại.',
+            'email.unique' => 'Email đã tồn tại.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
         ];

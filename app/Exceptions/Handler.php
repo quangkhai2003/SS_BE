@@ -24,17 +24,22 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            return false;
+        $this->renderable(function (ValidationException $e, $request) {
+            $message = 'Lỗi';
+            return response()->json([
+                'message' => $message,
+            ], 422);
         });
     }
     public function render($request, Throwable $e)
     {
         // Xử lý lỗi ValidationException (trả về phản hồi cho người dùng)
         if ($e instanceof ValidationException) {
-            $message = 'Đăng ký không thành công.';
+            $message = 'Lỗi';
+            $errors = $e->validator->errors()->getMessages();
             return response()->json([
                 'message' => $message,
+                'errors' => $errors,
             ], 422);
         }
     }
