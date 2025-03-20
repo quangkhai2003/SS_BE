@@ -15,13 +15,12 @@ class UserResgisterResourse extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'full_name' => $this->full_name,
-            'email' => $this->email,
-            'study_day' => $this->study_day,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'username' => $this->resource['user']->username,
+            'full_name' => $this->resource['user']->full_name,
+            'email' => $this->resource['user']->email,
+            'study_day' => $this->resource['user']->study_day,
+            'created_at' => $this->resource['user']->created_at,
+            'updated_at' => $this->resource['user']->updated_at,
         ];
     }
 }

@@ -19,7 +19,10 @@ class UserService
     {
         $user = User::where('email', $data['email'])->first();
         if ($user && Hash::check($data['password'], $user->password)) {
-            return $user;
+            return
+            [
+                'user'=>$user,
+            ];
         }
         return false;
     }
