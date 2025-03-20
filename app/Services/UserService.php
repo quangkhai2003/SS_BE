@@ -8,23 +8,22 @@ class UserService
 {
     public function create(array $data)
     {
-        return User::create([
+        return [User::create([
             'username' => $data['username'],
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-        ]);
+        ]),
+        $mesage = 'Register success'
+        ];
     }
-    public function login(array $data)
+    public function login($email,$password)
     {
-        $user = User::where('email', $data['email'])->first();
-        if ($user && Hash::check($data['password'], $user->password)) {
-            return
-            [
-                'user'=>$user,
-            ];
+        $user = User::where('email',$email)->first();
+        if(!$user || !Hash::check($password, $user->password)){
+            return "Email or password is incorrect";
         }
-        return false;
+        return $user;
     }
     public function find($id)
     {

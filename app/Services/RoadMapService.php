@@ -2,12 +2,12 @@
 namespace App\Services;
 
 use App\Models\Level;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Progress;
+use App\Models\Word;
 
 class RoadMapService
 {
-    public function GetWordInLevel($topic, $node){
+    public function Lesson($topic, $node){
         $progress = Progress::where('topic_name', $topic)->first();
         if (!$progress) {
             return response()->json([
@@ -60,5 +60,36 @@ class RoadMapService
             'correct_answer' => $words[3]->image, 
         ];
         return $lessons;
+    }
+    public function getWord($data)
+    {
+        $word = Word::where('word', $data)->first();
+        if ($word) {
+            return $word;
+        }
+        return false;
+    }
+    public function getWordInLevel($topic, $node)
+    {
+        $progress = Progress::where('topic_name', $topic)->first();
+        if (!$progress) {
+            return response()->json([
+                'message' => "Không tìm thấy topic: $topic",
+                'status' => 'error'
+            ], 404);
+        }
+        //level_id: (progress_id - 1) * 4 + node
+        $levelId = (($progress->progress_id - 1) * 4) + $node;
+        $level = Level::find($levelId);
+        if (!$level) {
+            return false;
+        }
+
+        $words = $level->words;
+
+        if (!$words) {
+            return false;
+        }
+        return $words;
     }
 }

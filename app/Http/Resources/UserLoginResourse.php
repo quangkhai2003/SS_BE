@@ -15,10 +15,10 @@ class UserLoginResourse extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'username' => $this->resource['user']->username,
-            'full_name' => $this->resource['user']->full_name,
-            'email' => $this->resource['user']->email,
-            'point' => $this->resource['user']->point,
+            'username' => $this->username,
+            'full_name' => $this->full_name,    
+            'email' => $this->email,
+            'study_day' => $this->study_day,
         ];
     }
 }

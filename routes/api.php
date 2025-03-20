@@ -16,11 +16,10 @@ use App\Http\Controllers\RoadMapController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 Route::get('/user', [AuthController::class, 'user']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/lesson', [RoadMapController::class,'Lesson']);
 Route::post('/getWordInLevel', [RoadMapController::class,'GetWordInLevel']);
-Route::post('/Lesson', [RoadMapController::class,'Lesson']);
+Route::post('/getWord', [RoadMapController::class,'GetWord']);

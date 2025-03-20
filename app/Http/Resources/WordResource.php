@@ -15,7 +15,6 @@ class WordResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id_word' => $this->id_word,
             'id_level' => $this->id_level,
             'word' => $this->word,
             'image' => $this->image,

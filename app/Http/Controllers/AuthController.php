@@ -21,12 +21,12 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request) {
         $user = $this->userService->create($request->validated());
-        return UserResgisterResourse::make($user);
+        return $user;
     }
     public function login(UserLoginRequest $request) 
     {
-        $user = $this->userService->login($request->validated());
-        return $user;
+        $user = $this->userService->login($request->email, $request->password);
+        return UserLoginResourse::make($user);
     }
     public function user() {
         return "Hello User";
