@@ -3,29 +3,87 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Services\JwtService;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService
 {
+    protected $jwtService;
+
+    public function __construct(JwtService $jwtService)
+    {
+        $this->jwtService = $jwtService;
+    }
+
     public function create(array $data)
     {
+        $user = User::create([
+            'username' => $data['username'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
         return [
-            User::create([
-                'username' => $data['username'],
-                'full_name' => $data['full_name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-            ]),
-            $message = 'Đăng ký thành công'
+            'user'=> $user,
+            'access_token' => $this->jwtService->generateToken($user)['access_token'],
+            'refresh_token' => $this->jwtService->generateToken($user)['refresh_token'],
         ];
     }
-    public function login($email, $password)
+
+    public function createAdmin(Array $data)
     {
-        $user = User::where('email', $email)->first();
-        if (!$user || !Hash::check($password, $user->password)) {
-            return "Email or password is incorrect";
+        $user = User::create([
+            'username' => $data['username'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => 'Admin',
+        ]);
+        return [
+            'user'=> $user,
+            'access_token' => $this->jwtService->generateToken($user)['access_token'],
+        ];
+    }
+    
+    public function login(array $data)
+    {
+        $user = User::where('email', $data['email'])->first();
+        if (!$user || $user->role !== 'User' || !Hash::check($data['password'], $user->password)) {
+            return "Không phải User"; // hoặc trả về response lỗi phù hợp
         }
-        return $user;
+
+        $access_token = $this->jwtService->generateToken($user)['access_token'];
+
+        //$refreshToken = $this->jwtService->refreshToken()['refresh_token'];
+
+        return [
+            'user' => $user,
+            'access_Token' => $access_token,
+            //'refresh_token' => $refreshToken,
+            'token_type' => 'bearer',
+            //'expires_in' => JWTAuth::factory()->getTTL() * 30,
+        ];
+    }
+
+    public function loginAdmin(Array $data)
+    {
+        $user = User::where('email', $data['email'])->first();
+        if (!$user || $user->role !== 'Admin' || !Hash::check($data['password'], $user->password)) {
+            return 'Không phải admin'; // hoặc trả về response lỗi phù hợp
+        }
+        return [
+            'user' => $user,
+            'access_Token' => $this->jwtService->generateToken($user)['access_token'],
+        ];
+    }
+
+    public function logout($token)
+    {
+        //return $this->jwtService->logout($token);
+        dd($this->jwtService->getToken());
     }
 
     public function find($id)
@@ -45,10 +103,8 @@ class UserService
         return $user;
     }
 
-    public function delete($id)
+    public function delete(array $data)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return true;
+
     }
 }

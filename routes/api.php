@@ -26,6 +26,7 @@ Route::group([
 ], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/getWordInLevel', [RoadMapController::class,'GetWordInLevel']);
 });
 
@@ -38,7 +39,7 @@ Route::group([
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/login', [AdminController::class, 'login']);
     Route::post('/logout', [AdminController::class, 'logout']);
-    Route::get('/profile', [AdminController::class, 'logout'])->middleware('checkrole:admin');
+    //Route::get('/profile', [AdminController::class, 'logout'])->middleware('checkrole:Admin');
 });
 
     

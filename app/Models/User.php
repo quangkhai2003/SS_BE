@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+    
+    protected $primaryKey = 'user_id';
 
     protected $fillable = [
         'username',
@@ -28,6 +29,29 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            'role' => $this->role // add role JWT claims
+        ];
+    }
+
+    // check role
+    public function isAdmin()
+    {
+        return $this->role === 'Admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'User';
+    }
 
     
 }

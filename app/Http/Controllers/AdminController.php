@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\UserResgisterResourse;
+use App\Models\User;
+use App\Http\Requests\RoadMapRequest;
+use App\Services\RoadMapService;
 
 class AdminController extends Controller 
 {
@@ -19,17 +21,21 @@ class AdminController extends Controller
         $this->userService = $userService;
     }
 
-    public function register(){
-
+    public function register(UserRegisterRequest $request) 
+    {
+        $user = $this->userService->createAdmin($request->validated());
+        return $user;
     }
 
-    public function login(){
-
+    public function login(UserLoginRequest $request)
+    {
+        $user = $this->userService->loginAdmin($request->validated());
+        return $user;
     }
+
+   
 
     public function logout(){
 
     }
-
-
 }

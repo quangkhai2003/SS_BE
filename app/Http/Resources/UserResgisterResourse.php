@@ -17,16 +17,16 @@ class UserResgisterResourse extends JsonResource
 
         $user = $this->resource['user'];
 
-
         $data = [
             'username' => $this->$user->username,
             'full_name' => $this->$user->full_name,
             'email' => $this->$user->email,
+            'role' => $this->$user->role,
             'study_day' => $this->$user->study_day,
             'created_at' => $this->$user->created_at,
             'updated_at' => $this->$user->updated_at,
+            'access_token' => $this->resource['token'],
         ];
-
         return $data;
     }
 }

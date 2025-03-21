@@ -23,8 +23,7 @@ class CheckRole
                 'message' => 'Unauthorized'
             ], 403);
         }
-        // Nếu user có role trùng khớp với role được yêu cầu, tiếp tục thực thi request
-
+        
         return $next($request);
     }
 }
