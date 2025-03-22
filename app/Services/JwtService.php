@@ -4,55 +4,64 @@ namespace App\Services;
 
 use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class JwtService
 {
     public function generateToken(User $user)
     {
-            $token = JWTAuth::fromUser($user);
-            return [
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => JWTAuth::factory()->getTTL() * 60
-            ];
-    }
+        $accessToken = JWTAuth::fromUser($user);
+        $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
 
-    public function refreshToken()
-    {
-        $token = JWTAuth::parseToken()->refresh();
-        $ttl = JWTAuth::factory()->getTTL() * 10;
         return [
-            'refresh_token' => $token,
+            'message' => 'Token generated successfully',
+            'user' => $user,
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
             'token_type' => 'bearer',
-            'expires_in' => $ttl
+            'expires_in' => JWTAuth::factory()->getTTL() * 60
         ];
     }
-    
-    public function getToken()
-    {
-        return JWTAuth::getToken();
-    }
-    
-    public function logout($token)
+
+    public function refreshToken($refreshToken)
     {
         try {
-            //$token = JWTAuth::getToken(); // Lấy token từ request
-            if (!$token) {
-                return response()->json(['error' => 'Token not provided'], 400);
+            // Set token và lấy payload
+            JWTAuth::setToken($refreshToken);
+            $claims = JWTAuth::getPayload()->toArray();
+
+            // Kiểm tra token có phải refresh token không
+            if (!isset($claims['refresh']) || !$claims['refresh']) {
+                return response()->json(['error' => 'Invalid refresh token'], 401);
             }
 
-            JWTAuth::invalidate($token); // Vô hiệu hóa token
-            return response()->json(['message' => 'Logout success']);
+            // Lấy user từ `sub` (User ID trong token)
+            $userId = $claims['sub'];
+            $user = User::find($userId);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            // Tạo access token và refresh token mới
+            $newTokens = $this->generateToken($user);
+
+            return response()->json([
+                'access_token' => $newTokens['access_token'],
+                'refresh_token' => $newTokens['refresh_token'],
+            ]);
         } catch (TokenExpiredException $e) {
-            return response()->json(['error' => 'Token has already expired'], 401);
-        } catch (TokenInvalidException $e) {
-            return response()->json(['error' => 'Invalid token'], 401);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
+            return response()->json(['error' => 'Refresh token expired. Please log in again.'], 401);
+        } catch (TokenInvalidException | TokenBlacklistedException $e) {
+            return response()->json(['error' => 'Invalid refresh token.'], 401);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not refresh token.'], 400);
         }
     }
+
+    
 
 }

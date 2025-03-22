@@ -24,23 +24,16 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->renderable(function (ValidationException $e, $request) {
-            $message = 'Lỗi';
-            return response()->json([
-                'message' => $message,
-            ], 422);
+        $this->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            return response()->json(['error' => 'Unauthorized - Custom Handler'], 401);
         });
-    }
-    public function render($request, Throwable $e)
-    {
-        //Xử lý lỗi ValidationException (trả về phản hồi cho người dùng)
-        if ($e instanceof ValidationException) {
-            $message = 'Lỗi';
-            $errors = $e->validator->errors()->getMessages();
-            return response()->json([
-                'message' => $message,
-                'errors' => $errors,
-            ], 422);
-        }
+    
+        $this->renderable(function (\Tymon\JWTAuth\Exceptions\JWTException $e, $request) {
+            return response()->json(['error' => 'JWT Error: ' . $e->getMessage()], 401);
+        });
+    
+        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, $request) {
+            return response()->json(['error' => 'Forbidden - You do not have permission'], 403);
+        });
     }
 }

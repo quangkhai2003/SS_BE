@@ -22,7 +22,7 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request) 
     {
-        $user = $this->userService->create($request->validated());
+        $user = $this->userService->register($request->validated());
         return $user;
     }
 
@@ -34,7 +34,19 @@ class AuthController extends Controller
 
     public function logout(Request $request) 
     {
-        $user = $this->jwtService->logout($request->bearerToken());
+        $user = $this->userService->logout($request->bearerToken());
+        return $user;
+    }
+
+    public function refresh(Request $request)
+    {
+        $user = $this->jwtService->refreshToken($request->bearerToken());
+        return $user;
+    }
+
+    public function profile(Request $request)
+    {
+        $user = $this->userService->getProfile($request->bearerToken());
         return $user;
     }
     

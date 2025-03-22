@@ -26,7 +26,9 @@ Route::group([
 ], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('checkrole:User');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:User');
+    Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User');
     Route::post('/getWordInLevel', [RoadMapController::class,'GetWordInLevel']);
 });
 

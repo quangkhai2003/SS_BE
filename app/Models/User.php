@@ -41,17 +41,4 @@ class User extends Authenticatable implements JWTSubject
             'role' => $this->role // add role JWT claims
         ];
     }
-
-    // check role
-    public function isAdmin()
-    {
-        return $this->role === 'Admin';
-    }
-
-    public function isUser()
-    {
-        return $this->role === 'User';
-    }
-
-    
 }

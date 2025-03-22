@@ -4,14 +4,13 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Services\JwtService;
-use Illuminate\Database\Eloquent\Casts\Json;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Js;
 use Illuminate\Http\JsonResponse;
 
-class UserService
+class AdminService
 {
+
     protected $jwtService;
 
     public function __construct(JwtService $jwtService)
@@ -19,13 +18,14 @@ class UserService
         $this->jwtService = $jwtService;
     }
 
-    public function register(array $data)
+    public function registerAdmin(array $data)
     {
         $user = User::create([
             'username' => $data['username'],
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => 'Admin',
         ]);
         return [
             'user'=> $user,
@@ -33,11 +33,11 @@ class UserService
         ];
     }
 
-    public function login(array $data)
+    public function loginAdmin(array $data)
     {
         $user = User::where('email', $data['email'])->first();
-        if (!$user || $user->role !== 'User' || !Hash::check($data['password'], $user->password)) {
-            return "Không phải User";
+        if (!$user || $user->role !== 'Admin' || !Hash::check($data['password'], $user->password)) {
+            return 'Không phải admin'; // hoặc trả về response lỗi phù hợp
         }
 
         $tokens = $this->jwtService->generateToken($user);
@@ -57,24 +57,5 @@ class UserService
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to logout'], 500);
         }
-        
-    }
-
-    public function getProfile($token)
-    {
-        if (!$token) {
-            return response()->json(['error' => 'Token not provided'], 400);
-        }
-
-        JWTAuth::setToken($token);
-        if (!JWTAuth::check()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid token'
-            ], 401);
-        }
-
-        $user = JWTAuth::user();
-        return $user;
     }
 }
