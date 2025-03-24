@@ -28,7 +28,6 @@ class UserService
             'password' => Hash::make($data['password']),
         ]);
         return [
-            'user'=> $user,
             'access_token' => $this->jwtService->generateToken($user)['access_token'],
         ];
     }
@@ -43,7 +42,6 @@ class UserService
         $tokens = $this->jwtService->generateToken($user);
 
         return [
-            'user' => $user,
             'access_token' => $tokens['access_token'],
             'refresh_token' => $tokens['refresh_token'],
         ];
