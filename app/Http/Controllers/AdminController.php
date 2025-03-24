@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRegisterRequest;
-use App\Http\Requests\UserLoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Resources\LoginResource;
 use App\Services\AdminService;
-use Illuminate\Http\Request;
+
 
 
 class AdminController extends Controller 
@@ -18,16 +19,16 @@ class AdminController extends Controller
         $this->adminService = $adminService;
     }
 
-    public function register(UserRegisterRequest $request) 
+    public function register(RegisterRequest $request) 
     {
         $user = $this->adminService->registerAdmin($request->validated());
         return $user;
     }
 
-    public function login(UserLoginRequest $request)
+    public function login(LoginRequest $request)
     {
-        $user = $this->adminService->loginAdmin($request->validated());
-        return $user;
+        $user = $this->adminService->loginAdmin($request);
+        return LoginResource::make($user);
     }
 
     public function logout()

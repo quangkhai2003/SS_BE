@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Services\JwtService;
-use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Auth\AuthenticationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Js;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserService
 {
@@ -19,11 +19,11 @@ class UserService
         $this->jwtService = $jwtService;
     }
 
-    public function register(array $data)
+    public function register(Request $data)
     {
         $user = User::create([
             'username' => $data['username'],
-            'full_name' => $data['full_name'],
+            'full_name' =>'full_name',
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
@@ -36,7 +36,7 @@ class UserService
     {
         $user = User::where('email', $data['email'])->first();
         if (!$user || $user->role !== 'User' || !Hash::check($data['password'], $user->password)) {
-            return "Không phải User";
+            throw new AuthenticationException('Invalid credentials or not an user');
         }
 
         $tokens = $this->jwtService->generateToken($user);
@@ -74,5 +74,11 @@ class UserService
 
         $user = JWTAuth::user();
         return $user;
+    }
+    public function delete($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return true;
     }
 }

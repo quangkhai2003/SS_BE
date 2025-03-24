@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RoadMapRequest;
 use App\Services\RoadMapService;
-use Illuminate\Http\Request;
-use App\Models\Word;
-use App\Models\Progress;
+
 
 class RoadMapController extends Controller
 {

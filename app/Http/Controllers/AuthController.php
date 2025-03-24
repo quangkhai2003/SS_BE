@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\JwtService;
-use App\Http\Requests\UserLoginRequest;
-use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\LoginResource;
+use App\Http\Resources\RegisterResource;
 
 class AuthController extends Controller
 {
@@ -20,16 +22,18 @@ class AuthController extends Controller
         $this->jwtService = $jwtService;
     }
 
-    public function register(UserRegisterRequest $request) 
+    public function register(RegisterRequest $request) 
     {
-        $user = $this->userService->register($request->validated());
-        return $user;
+        
+        $user = $this->userService->register($request);
+
+        return RegisterResource::make($user);
     }
 
-    public function login(UserLoginRequest $request)
+    public function login(LoginRequest $request)
     {
         $user = $this->userService->login($request->validated());
-        return $user;
+        return LoginResource::make($user);
     }
 
     public function logout(Request $request) 
@@ -49,5 +53,15 @@ class AuthController extends Controller
         $user = $this->userService->getProfile($request->bearerToken());
         return $user;
     }
-    
+
+    // public function loginGuest(Request $request)
+    // {
+    //     $guestInfo = $this->guestService->Register();
+    //     return $guestInfo;
+    // }
+    // public function logoutGuest(Request $request)
+    // {
+    //     $user = $this->guestService->logoutGuest($request->bearerToken());
+    //     return $user;
+    // }
 }

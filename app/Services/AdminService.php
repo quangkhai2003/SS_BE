@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Services\JwtService;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
@@ -32,11 +34,11 @@ class AdminService
         ];
     }
 
-    public function loginAdmin(array $data)
+    public function loginAdmin(Request $data)
     {
         $user = User::where('email', $data['email'])->first();
         if (!$user || $user->role !== 'Admin' || !Hash::check($data['password'], $user->password)) {
-            return 'Không phải admin'; // hoặc trả về response lỗi phù hợp
+            throw new AuthenticationException('Invalid credentials or not an admin');
         }
 
         $tokens = $this->jwtService->generateToken($user);

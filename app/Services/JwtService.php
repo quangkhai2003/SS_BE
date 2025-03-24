@@ -22,7 +22,7 @@ class JwtService
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60
+            'expires_in' => JWTAuth::factory()->getTTL() * 1
         ];
     }
 
@@ -51,7 +51,7 @@ class JwtService
 
             return response()->json([
                 'access_token' => $newTokens['access_token'],
-                'refresh_token' => $newTokens['refresh_token'],
+
             ]);
         } catch (TokenExpiredException $e) {
             return response()->json(['error' => 'Refresh token expired. Please log in again.'], 401);
