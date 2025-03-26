@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -30,6 +31,7 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:User');
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User');
     Route::post('/getWordInLevel', [RoadMapController::class,'GetWordInLevel']);
+    Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:User');
 });
 
 Route::group([
@@ -41,6 +43,7 @@ Route::group([
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/login', [AdminController::class, 'login']);
     Route::post('/logout', [AdminController::class, 'logout']);
+    
     //Route::get('/profile', [AdminController::class, 'logout'])->middleware('checkrole:Admin');
 });
 
