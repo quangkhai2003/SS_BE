@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -34,6 +35,7 @@ Route::group([
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
     Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');
+    Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:User');
 });
 
 Route::group([
@@ -45,6 +47,7 @@ Route::group([
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/login', [AdminController::class, 'login']);
     Route::post('/logout', [AdminController::class, 'logout']);
+    
     //Route::get('/profile', [AdminController::class, 'logout'])->middleware('checkrole:Admin');
 });
 
