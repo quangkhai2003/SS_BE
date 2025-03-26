@@ -30,9 +30,10 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('checkrole:User');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:User');
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User');
-    Route::post('/getWordInLevel', [RoadMapController::class,'GetWordInLevel'])->middleware('checkrole:User');
+    Route::post('/getLesson', [RoadMapController::class,'GetLesson'])->middleware('checkrole:User');
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
+    Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');
 });
 
 Route::group([

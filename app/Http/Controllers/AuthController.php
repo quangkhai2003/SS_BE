@@ -8,7 +8,9 @@ use App\Services\JwtService;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\LoginResource;
+use App\Http\Resources\RefreshResource;
 use App\Http\Resources\RegisterResource;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -45,13 +47,13 @@ class AuthController extends Controller
     public function refresh(Request $request)
     {
         $user = $this->jwtService->refreshToken($request->bearerToken());
-        return $user;
+        return  RefreshResource::make($user);
     }
 
     public function profile(Request $request)
     {
         $user = $this->userService->getProfile($request->bearerToken());
-        return $user;
+        return UserResource::make($user);
     }
 
     // public function loginGuest(Request $request)

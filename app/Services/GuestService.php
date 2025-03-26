@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Services\UserService;
+use GuzzleHttp\Psr7\Request;
 
 class GuestService
 {
@@ -26,13 +27,11 @@ class GuestService
         // Gắn giá trị cho các trường
         $data = [
             'username' => $randomUser,
-            'full_name' => $randomUser,
             'email' => $randomUser . '@gmail.com',
             'password' => $randomUser, // Password cũng dùng randomUser để đảm bảo đủ 8 ký tự
         ];
         $user = User::create([
             'username' => $data['username'],
-            'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => 'Guest',
@@ -64,4 +63,21 @@ class GuestService
             'message' => 'User is not a guest',
         ], 400);
     }
+    public function upgradeGuestToUser(User $user, array $data)
+    {
+        $user->update([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => 'User',
+        ]);
+
+        $tokens = $this->jwtService->generateToken($user);
+
+        return [
+            'access_token' => $tokens['access_token'],
+            'refresh_token' => $tokens['refresh_token'],
+        ];
+    }
+
 }

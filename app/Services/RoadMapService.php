@@ -7,7 +7,7 @@ use App\Models\Progress;
 
 class RoadMapService
 {
-    public function GetWordInLevel($topic, $node){
+    public function GetLesson($topic, $node){
         $progress = Progress::where('topic_name', $topic)->first();
         if (!$progress) {
             return response()->json([

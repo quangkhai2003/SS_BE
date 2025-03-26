@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoadMapRequest;
+use App\Http\Resources\LessonResource;
 use App\Services\RoadMapService;
 
 
@@ -15,9 +16,9 @@ class RoadMapController extends Controller
     {
         $this->levelService = $levelService;
     }
-    public function GetWordInLevel(RoadMapRequest $request)
+    public function GetLesson(RoadMapRequest $request)
     {
-        $lessonInfo = $this->levelService->GetWordInLevel($request->topic, $request->node);
-        return $lessonInfo;
+        $lessonInfo = $this->levelService->GetLesson($request->topic, $request->node);
+        return LessonResource::collection($lessonInfo);
     }
 }

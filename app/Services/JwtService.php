@@ -29,11 +29,9 @@ class JwtService
     public function refreshToken($refreshToken)
     {
         try {
-            // Set token và lấy payload
             JWTAuth::setToken($refreshToken);
             $claims = JWTAuth::getPayload()->toArray();
 
-            // Kiểm tra token có phải refresh token không
             if (!isset($claims['refresh']) || !$claims['refresh']) {
                 return response()->json(['error' => 'Invalid refresh token'], 401);
             }
@@ -49,10 +47,9 @@ class JwtService
             // Tạo access token và refresh token mới
             $newTokens = $this->generateToken($user);
 
-            return response()->json([
+            return [
                 'access_token' => $newTokens['access_token'],
-
-            ]);
+            ];
         } catch (TokenExpiredException $e) {
             return response()->json(['error' => 'Refresh token expired. Please log in again.'], 401);
         } catch (TokenInvalidException | TokenBlacklistedException $e) {

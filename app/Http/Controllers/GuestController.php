@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\LoginResource;
 use Illuminate\Http\Request;
 use App\Services\GuestService;
@@ -24,5 +25,11 @@ class GuestController extends Controller
     {
         $logoutInfo = $this->guestService->logoutGuest();
         return $logoutInfo;
+    }
+    public function upgradeGuest(RegisterRequest $request)
+    {
+        $user = auth()->user();
+        $userData = $this->guestService->upgradeGuestToUser($user, $request->validated());
+        return new LoginResource($userData);
     }
 }
