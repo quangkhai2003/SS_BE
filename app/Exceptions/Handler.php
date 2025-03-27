@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,8 +24,16 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            return response()->json(['error' => 'Unauthorized - Custom Handler'], 401);
+        });
+    
+        $this->renderable(function (\Tymon\JWTAuth\Exceptions\JWTException $e, $request) {
+            return response()->json(['error' => 'JWT Error: ' . $e->getMessage()], 401);
+        });
+    
+        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e, $request) {
+            return response()->json(['error' => 'Forbidden - You do not have permission'], 403);
         });
     }
 }
