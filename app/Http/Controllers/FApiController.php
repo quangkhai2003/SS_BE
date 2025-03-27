@@ -19,6 +19,6 @@ class FApiController extends Controller{
     {
         $result = $this->FApiservice->processAiRequest($Request->file('file'));
 
-        return $result;
+        return new FApiResource($result);
     }
 }

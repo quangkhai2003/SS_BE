@@ -57,4 +57,5 @@ class AdminService
             return response()->json(['error' => 'Failed to logout'], 500);
         }
     }
+    
 }

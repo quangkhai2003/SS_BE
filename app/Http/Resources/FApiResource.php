@@ -9,6 +9,9 @@ class FapiResource extends JsonResource
 {
     public function toArray(Request $request)
     {
-        return parent::toArray($request);
+        return [
+            'predictions' => PredictionResource::collection($this->resource['predictions'] ?? []),
+            'processed_image' => $this->resource['processed_image'] ?? null,
+        ];
     }
 }

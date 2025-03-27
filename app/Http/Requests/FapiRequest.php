@@ -16,4 +16,12 @@ class FApiRequest extends FormRequest
             'file' => 'required|file|max:10240',
         ];
     }
+    public function messages()
+    {
+        return [
+           'file.required' => 'Please upload a file',
+           'file.file' => 'Please upload a file',
+           'file.max' => 'File size should not exceed',
+        ];
+    }
 }
