@@ -24,7 +24,7 @@ class UserLoginRequest extends FormRequest
         return [
             // return
             'email' => 'required|email|max:255',
-            'password' => 'required|string|min:8|max:255',
+            'password' => 'required|string|min:6|max:255',
         ];
     }
     public function messages(): array
@@ -35,7 +35,7 @@ class UserLoginRequest extends FormRequest
             'email.max' => 'Email không được dài quá 255 ký tự.',
             'password.required' => 'Mật khẩu là bắt buộc.',
             'password.string' => 'Mật khẩu phải là chuỗi ký tự.',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'password.max' => 'Mật khẩu không được dài quá 255 ký tự.',
         ];
     }

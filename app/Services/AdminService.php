@@ -22,7 +22,7 @@ class AdminService
     {
         $user = User::create([
             'username' => $data['username'],
-            'full_name' => $data['full_name'],
+            'full_name' => 'full_name',
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => 'Admin',
