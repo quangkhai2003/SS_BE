@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Services\JwtService;
+use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -14,10 +15,12 @@ class AdminService
 {
 
     protected $jwtService;
+    protected $userService;
 
-    public function __construct(JwtService $jwtService)
+    public function __construct(JwtService $jwtService, UserService $userService)
     {
         $this->jwtService = $jwtService;
+        $this->userService = $userService;
     }
 
     public function registerAdmin(array $data)
@@ -57,5 +60,58 @@ class AdminService
             return response()->json(['error' => 'Failed to logout'], 500);
         }
     }
+    public function getUser($username, $email)
+    {
+        $query = User::query();
+        $query->where('role', '!=', 'Admin');
+        // Nếu có username, tìm theo username
+        if ($username) {
+            $query->where('username', 'LIKE', "%{$username}%");
+        }
+
+        // Nếu có email, tìm theo email
+        if ($email) {
+            // Nếu đã có điều kiện username, dùng AND thay vì OR
+            $query->where('email', 'LIKE', "%{$email}%");
+        }
+
+        // Lấy danh sách user
+        $users = $query->get();
+        if (!$users->isEmpty()) {
+         
+        }
+        return $users;
+    }
+    public function getUsersByRole($request)
+    {
     
+        $users = User::where('role', $request)->get();
+
+        if ($users->isEmpty()) {
+            throw new \Exception("No user found");
+        }
+        return  $users;
+    }
+    public function getAllUser()
+    {
+        $users = User::whereIn('role', ['User', 'Guest'])->get();
+
+        if ($users->isEmpty()) {
+            throw new \Exception("No user found");
+        }
+
+        return $users;
+    }
+    public function deleteByEmail($email)
+    {
+        // Tìm user theo email
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            throw new \Exception('User with email ' . $email . ' not found');
+        }
+        // Xóa user
+        $this->userService->delete($user->user_id);
+        return "deleted successfully";
+    }
+
 }

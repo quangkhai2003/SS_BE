@@ -46,9 +46,12 @@ Route::group([
 ], function ($router) {
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/login', [AdminController::class, 'login']);
-    Route::post('/logout', [AdminController::class, 'logout']);
-    
-    //Route::get('/profile', [AdminController::class, 'logout'])->middleware('checkrole:Admin');
+    Route::post('/logout', [AdminController::class, 'logout'])->middleware('checkrole:Admin');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:Admin');
+    Route::post('/getUser', [AdminController::class, 'getUser'])->middleware('checkrole:Admin');
+    Route::post('/getAllUser', [AdminController::class, 'getAllUser'])->middleware('checkrole:Admin');
+    Route::post('/getUsersByRole', [AdminController::class, 'getUsersByRole'])->middleware('checkrole:Admin');
+    Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
 });
 
     
