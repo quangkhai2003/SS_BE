@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Services\JwtService;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Auth\AuthenticationException;
 
 class AdminService
 {
@@ -39,13 +39,15 @@ class AdminService
         if (!$user || $user->role !== 'Admin' || !Hash::check($data['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials or not an admin');
         }
+        $token = $this->jwtService->generateToken($user);
 
-        $tokens = $this->jwtService->generateToken($user);
-
-        return [
-            'access_token' => $tokens['access_token'],
-            'refresh_token' => $tokens['refresh_token'],
-        ];
+        // Lưu token vào cookie
+        $cookie = cookie('jwt_token', $token, 1); // 60 phút là thời gian sống của cookie, tùy chỉnh theo nhu cầu
+    
+        // Trả về response kèm cookie
+        return response()->json([
+            'message' => 'Login successful',
+        ])->withCookie($cookie);
     }
 
     public function logout():JsonResponse

@@ -29,7 +29,7 @@ class AdminController extends Controller
     public function login(LoginRequest $request)
     {
         $user = $this->adminService->loginAdmin($request);
-        return LoginResource::make($user);
+        return $user;
     }
 
     public function logout()
