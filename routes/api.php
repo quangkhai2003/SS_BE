@@ -36,6 +36,9 @@ Route::group([
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
     Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:User');
+    Route::post('/pronunciation',[FApiController::class,'pronunciation']);
+    Route::post('/audio',[FApiController::class,'audio']);  
+    Route::post('/generate',[FApiController::class,'generate']);
 });
 
 Route::group([
@@ -52,6 +55,7 @@ Route::group([
     Route::post('/getAllUser', [AdminController::class, 'getAllUser'])->middleware('checkrole:Admin');
     Route::post('/getUsersByRole', [AdminController::class, 'getUsersByRole'])->middleware('checkrole:Admin');
     Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
+    Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:Admin');
 });
 
     

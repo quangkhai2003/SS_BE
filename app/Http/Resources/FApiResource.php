@@ -11,7 +11,7 @@ class FapiResource extends JsonResource
     {
         return [
             'predictions' => PredictionResource::collection($this->resource['predictions'] ?? []),
-            'processed_image' => $this->resource['processed_image'] ?? null,
+            'image' => $this->resource['image'] ?? null,
         ];
     }
 }
