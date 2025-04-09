@@ -31,7 +31,12 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('checkrole:User');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:User');
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User');
-    Route::post('/getLesson', [RoadMapController::class,'GetLesson'])->middleware('checkrole:User');
+    Route::post('/getLesson1', [RoadMapController::class,'GetLesson1']);
+    Route::post('/getLesson2', [RoadMapController::class,'GetLesson2']);
+    Route::post('/getLesson3', [RoadMapController::class,'GetLesson3']);
+    Route::post('/getLesson4', [RoadMapController::class,'GetLesson4']);
+    Route::post('/getWordLevel', [RoadMapController::class,'GetWordLevel']);
+    Route::post('/getWordTopic', [RoadMapController::class,'GetWordTopic']);
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
     Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');
@@ -56,6 +61,7 @@ Route::group([
     Route::post('/getUsersByRole', [AdminController::class, 'getUsersByRole'])->middleware('checkrole:Admin');
     Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:Admin');
+    Route::post('/updateWord', [RoadMapController::class,'UpdateWord'])->middleware('checkrole:Admin');
 });
 
     
