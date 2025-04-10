@@ -37,6 +37,8 @@ Route::group([
     Route::post('/getLesson4', [RoadMapController::class,'GetLesson4']);
     Route::post('/getWordLevel', [RoadMapController::class,'GetWordLevel']);
     Route::post('/getWordTopic', [RoadMapController::class,'GetWordTopic']);
+    Route::get('/getAllWords', [RoadMapController::class,'GetAllWords']);
+    Route::post('/getWord', [RoadMapController::class,'GetWord']);
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
     Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');

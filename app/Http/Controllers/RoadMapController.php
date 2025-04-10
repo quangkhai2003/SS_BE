@@ -52,9 +52,19 @@ class RoadMapController extends Controller
         $WordInfo = $this->levelService->GetWordTopic($request->topic);
         return WordResource::collection($WordInfo);
     }
+    public function GetAllWords()
+    {
+        $Words = $this->levelService->GetAllWords();
+        return WordResource::collection($Words);
+    }
+    public function GetWord(Request $request)
+    {
+        $Word = $this->levelService->GetWord($request->word);
+        return WordResource::make($Word);
+    }
     public function UpdateWord(WordRequest $request)
     {
         $WordNew = $this->levelService->UpdateWord($request->validated());
-        return $WordNew;
+        return WordResource::make($WordNew);
     }
 }

@@ -185,6 +185,60 @@ class RoadMapService
         // Return all words as a collection
         return $allWords;
     }
+
+    public function GetWord($word)
+    {
+        // Tìm từ trong cơ sở dữ liệu
+        $wordInfo = Word::where('word', $word)->first();
+
+        // Kiểm tra xem từ có tồn tại không
+        if (!$wordInfo) {
+            throw new \Exception('Word not found');
+        }
+
+        // Trả về thông tin của từ
+        return $wordInfo;
+    }
+    public function GetAllWords()
+    {
+        // Lấy tất cả các progress (tương ứng với các topic)
+        $allProgress = Progress::all();
+
+        if ($allProgress->isEmpty()) {
+            throw new \Exception('No topics found');
+        }
+
+        $allWords = collect(); // Sử dụng collection để lưu trữ tất cả các từ
+
+        // Lặp qua từng progress (topic)
+        foreach ($allProgress as $progress) {
+            // Mỗi topic có 4 levels, lặp qua từng node (1 đến 4)
+            for ($node = 1; $node <= 4; $node++) {
+                // Tính toán levelId: (progress_id - 1) * 4 + node
+                $levelId = (($progress->progress_id - 1) * 4) + $node;
+                $level = Level::find($levelId);
+
+                if (!$level) {
+                    continue; // Bỏ qua nếu level không tồn tại
+                }
+
+                // Lấy các từ liên kết với level
+                $words = $level->words;
+                if ($words) {
+                    // Gộp tất cả các từ của level vào collection
+                    $allWords = $allWords->merge($words);
+                }
+            }
+        }
+
+        if ($allWords->isEmpty()) {
+            throw new \Exception('No words found');
+        }
+
+        // Trả về tất cả các từ dưới dạng collection
+        return $allWords;
+    }
+
     public function updateWord($data)
     {
         $word = Word::where('word', $data['word'])->first();
