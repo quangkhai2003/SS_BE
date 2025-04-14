@@ -39,10 +39,13 @@ Route::group([
     Route::post('/getWordTopic', [RoadMapController::class,'GetWordTopic']);
     Route::get('/getAllWords', [RoadMapController::class,'GetAllWords']);
     Route::post('/getWord', [RoadMapController::class,'GetWord']);
+    Route::post('/completeLevel', [RoadMapController::class,'completeLevel'])->middleware('checkrole:User');
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
     Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:User');
+    Route::get('/getLeaderboard', [AuthController::class, 'getLeaderboard']);
+    
     Route::post('/pronunciation',[FApiController::class,'pronunciation']);
     Route::post('/audio',[FApiController::class,'audio']);  
     Route::post('/generate',[FApiController::class,'generate']);
@@ -64,6 +67,8 @@ Route::group([
     Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:Admin');
     Route::post('/updateWord', [RoadMapController::class,'UpdateWord'])->middleware('checkrole:Admin');
+    Route::post('/CreateProgress', [RoadMapController::class,'CreateProgress']);
+    Route::post('/AddWordsToLevel', [RoadMapController::class,'AddWordsToLevel'])->middleware('checkrole:Admin');
 });
 
     

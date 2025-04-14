@@ -65,10 +65,7 @@ class UserService
 
         JWTAuth::setToken($token);
         if (!JWTAuth::check()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid token'
-            ], 401);
+            throw new AuthenticationException('Token is invalid or expired');
         }
 
         $user = JWTAuth::user();
@@ -79,5 +76,13 @@ class UserService
         $user = User::findOrFail($id);
         $user->delete();
         return true;
+    }
+    public function getTopUsers()
+    {
+        // Lấy 50 user có điểm cao nhất, chỉ lấy role là User hoặc Guest
+        return User::whereIn('role', ['User', 'Guest'])
+        ->orderBy('point', 'desc')
+        ->take(50)
+        ->get(['username', 'point']); // Chỉ lấy các cột cần thiết
     }
 }

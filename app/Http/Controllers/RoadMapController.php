@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RoadMapRequest;
 use App\Http\Requests\WordRequest;
+use App\Http\Requests\WordUpdateRequest;
 use App\Http\Resources\Lesson1Resource;
 use App\Http\Resources\Lesson2Resource;
 use App\Http\Resources\Lesson3Resource;
@@ -62,9 +63,24 @@ class RoadMapController extends Controller
         $Word = $this->levelService->GetWord($request->word);
         return WordResource::make($Word);
     }
-    public function UpdateWord(WordRequest $request)
+    public function UpdateWord(WordUpdateRequest $request)
     {
         $WordNew = $this->levelService->UpdateWord($request->validated());
         return WordResource::make($WordNew);
+    }
+    public function completeLevel(RoadMapRequest $request)
+    {
+        $result = $this->levelService->CompleteLevel($request->bearerToken(), $request->topic, $request->node);
+        return $result;
+    }
+    public function CreateProgress(Request $request)
+    {
+        $result = $this->levelService->CreateProgress($request->topic);
+        return $result;
+    }
+    public function AddWordsToLevel(Request $request)
+    {
+        $result = $this->levelService->AddWordsToLevel($request->levelId, $request->words);
+        return $result;
     }
 }

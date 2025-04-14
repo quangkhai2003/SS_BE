@@ -55,15 +55,9 @@ class AuthController extends Controller
         $user = $this->userService->getProfile($request->bearerToken());
         return UserResource::make($user);
     }
-
-    // public function loginGuest(Request $request)
-    // {
-    //     $guestInfo = $this->guestService->Register();
-    //     return $guestInfo;
-    // }
-    // public function logoutGuest(Request $request)
-    // {
-    //     $user = $this->guestService->logoutGuest($request->bearerToken());
-    //     return $user;
-    // }
+    public function getLeaderboard()
+    {
+        $topUsers = $this->userService->getTopUsers();
+        return $topUsers;
+    }
 }
