@@ -5,8 +5,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\RoadMapController;
+use PSpell\Dictionary;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,10 @@ use App\Http\Controllers\RoadMapController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+
+
+//below is the route for user
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -49,13 +55,14 @@ Route::group([
     Route::post('/pronunciation',[FApiController::class,'pronunciation']);
     Route::post('/audio',[FApiController::class,'audio']);  
     Route::post('/generate',[FApiController::class,'generate']);
+    Route::get('/getTopWordsByTopic', [DictionaryController::class, 'getTopWordsByTopic']);
 });
 
 Route::group([
 
     'middleware' => 'api',
     'prefix' => 'admin',
-
+// below is the route for admin
 ], function ($router) {
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/login', [AdminController::class, 'login']);
