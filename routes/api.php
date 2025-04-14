@@ -50,12 +50,12 @@ Route::group([
     Route::post('/logoutGuest', [GuestController::class, 'logoutGuest'])->middleware('checkrole:Guest');
     Route::post('/upgradeGuest', [GuestController::class, 'upgradeGuest'])->middleware('checkrole:Guest');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:User');
-    Route::get('/getLeaderboard', [AuthController::class, 'getLeaderboard']);
-    
+    Route::get('/leaderboard', [AuthController::class, 'getLeaderboard']);
     Route::post('/pronunciation',[FApiController::class,'pronunciation']);
     Route::post('/audio',[FApiController::class,'audio']);  
     Route::post('/generate',[FApiController::class,'generate']);
-    Route::get('/getTopWordsByTopic', [DictionaryController::class, 'getTopWordsByTopic']);
+    Route::get('/getDictionary', [DictionaryController::class, 'getTopWordsByTopic']);
+    
 });
 
 Route::group([

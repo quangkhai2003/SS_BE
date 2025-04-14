@@ -8,7 +8,7 @@ use function PHPUnit\Framework\exactly;
 
 class DictionaryService
 {        
-    public function getTopWordsByTopic() {
+    public function getDictionary() {
         $topics = Dictionary::select('topic')
             ->distinct()
             ->pluck('topic');
@@ -24,5 +24,18 @@ class DictionaryService
             }
     
         return $result;
+    }
+    public function getWordsByTopic($topic)
+    {
+        // Lấy tất cả các từ trong topic được chỉ định
+        $words = Dictionary::where('topic', $topic)
+            ->orderBy('dictionary_id', 'asc')
+            ->get(['dictionary_id', 'word', 'ipa', 'word_type', 'vietnamese', 'examples', 'examples_vietnamese', 'topic']);
+
+        // Kiểm tra nếu không có từ nào trong topic
+        if ($words->isEmpty()) {
+            throw new \Exception("No words found for the topic: $topic");
+        }
+        return $words;
     }
 }

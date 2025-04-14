@@ -26,3 +26,4 @@ class DictionaryResource extends JsonResource
         return new DictionaryCollection($resource);
     }
 }
+

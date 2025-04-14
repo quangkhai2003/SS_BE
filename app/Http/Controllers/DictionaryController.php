@@ -20,8 +20,7 @@ class DictionaryController extends Controller
     public function getTopWordsByTopic()
     {
     // {
-        $data = $this->dictionaryService->getTopWordsByTopic();
-        
+        $data = $this->dictionaryService->getDictionary();
         return $data;
     }
 }
