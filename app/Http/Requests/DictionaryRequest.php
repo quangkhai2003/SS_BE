@@ -11,7 +11,7 @@ class DictionaryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class DictionaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'topic' => 'required|string|max:255',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'topic.required' => 'Chủ đề là bắt buộc.',
+            'topic.string' => 'Chủ đề phải là chuỗi ký tự.',
+            'topic.max' => 'Chủ đề không được vượt quá 255 ký tự.',
         ];
     }
 }

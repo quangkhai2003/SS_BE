@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Progress;
 use App\Models\User;
 use App\Models\Word;
+use App\Models\Your_Dictionary;
 use App\Models\YourLevel;
 use Illuminate\Auth\AuthenticationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -293,7 +294,21 @@ class RoadMapService
             'user_id' => $userId,
             'level_id' => $levelId,
         ]);
+        $words = $level->words; // Lấy danh sách các từ trong level
+        foreach ($words as $word) {
+            // Kiểm tra xem từ đã tồn tại trong your_dictionary chưa
+            $existingWord = Your_Dictionary::where('user_id', $userId)
+                ->where('dictionary_id', $word->id)
+                ->first();
 
+            if (!$existingWord) {
+                Your_Dictionary::create([
+                    'user_id' => $userId,
+                    'dictionary_id' => $word->id,
+                    'created_at' => now(),
+                ]);
+            }
+        }
         $userFresh = User::find($user->user_id);
         $userFresh->point += 10;
         $userFresh->save();
@@ -301,7 +316,6 @@ class RoadMapService
         return [
             'message' => 'Level completed successfully',
             'level_id' => $levelId,
-            'point' => $userFresh->point,
         ];
     }
 
@@ -383,5 +397,54 @@ class RoadMapService
             'level_id' => $levelId,
             'current_word_count' => Word::where('id_level', $levelId)->count(),
         ];
+    }
+    public function GetUserLevel($token)
+    {
+        // Kiểm tra token
+        if (!$token) {
+            throw new \Exception('Token not provided');
+        }
+
+        // Xác thực token và lấy thông tin user
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new \Exception('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+        if (!$user) {
+            throw new \Exception('User not authenticated');
+        }
+
+        $userId = $user->user_id;
+
+        // Lấy tất cả các level mà người dùng đã hoàn thành
+        $userLevels = YourLevel::where('user_id', $userId)
+            ->with('level.progress') // Eager load thông tin level và progress
+            ->get();
+
+        // Kiểm tra nếu không có level nào
+        if ($userLevels->isEmpty()) {
+            throw new \Exception('No levels found for this user');
+        }
+
+        // Tạo danh sách các topic và node
+        $levels = [];
+        foreach ($userLevels as $userLevel) {
+            if ($userLevel->level && $userLevel->level->progress) {
+                $levelId = $userLevel->level->level_id;
+                $progressId = $userLevel->level->progress->progress_id;
+                $node = ($levelId - 1) % 4 + 1; // Tính node (1, 2, 3, hoặc 4)
+                $topic = $userLevel->level->progress->topic_name;
+
+                $levels[] = [
+                    'topic' => $topic,
+                    'node' => $node
+                ];
+            }
+        }
+
+        // Trả về danh sách các level
+        return $levels;
     }
 }

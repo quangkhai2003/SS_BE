@@ -10,6 +10,7 @@ use App\Http\Resources\Lesson2Resource;
 use App\Http\Resources\Lesson3Resource;
 use App\Http\Resources\Lesson4Resource;
 use App\Http\Resources\LessonResource;
+use App\Http\Resources\UserLevelResource;
 use App\Http\Resources\WordResource;
 use App\Services\RoadMapService;
 use Illuminate\Http\Request;
@@ -82,5 +83,10 @@ class RoadMapController extends Controller
     {
         $result = $this->levelService->AddWordsToLevel($request->levelId, $request->words);
         return $result;
+    }
+    public function GetUserLevel(Request $request)
+    {
+        $result = $this->levelService->GetUserLevel($request->bearerToken());
+        return UserLevelResource::collection($result);
     }
 }
