@@ -71,12 +71,12 @@ Route::group([
     Route::post('/logout', [AdminController::class, 'logout'])->middleware('checkrole:Admin');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:Admin');
     Route::post('/getUser', [AdminController::class, 'getUser'])->middleware('checkrole:Admin');
-    Route::post('/getAllUser', [AdminController::class, 'getAllUser'])->middleware('checkrole:Admin');
+    Route::get('/getAllUser', [AdminController::class, 'getAllUser'])->middleware('checkrole:Admin');
     Route::post('/getUsersByRole', [AdminController::class, 'getUsersByRole'])->middleware('checkrole:Admin');
     Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:Admin');
     Route::post('/updateWord', [RoadMapController::class,'UpdateWord'])->middleware('checkrole:Admin');
-    Route::post('/CreateProgress', [RoadMapController::class,'CreateProgress']);
+    Route::post('/CreateProgress', [RoadMapController::class,'CreateProgress'])->middleware('checkrole:Admin');
     Route::post('/AddWordsToLevel', [RoadMapController::class,'AddWordsToLevel'])->middleware('checkrole:Admin');
 });
 

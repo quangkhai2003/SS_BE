@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Dictionary;
 use App\Models\Level;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Progress;
@@ -241,78 +242,110 @@ class RoadMapService
         if (!$token) {
             return response()->json(['error' => 'Token not provided'], 400);
         }
-
+    
         JWTAuth::setToken($token);
         if (!JWTAuth::check()) {
             throw new AuthenticationException('Token is invalid or expired');
         }
-
+    
         $user = JWTAuth::user();
         if (!$user) {
             throw new \Exception('User not authenticated');
         }
-
+    
         $userId = $user->user_id;
-
+    
         // Tìm progress dựa trên topic
         $progress = Progress::where('topic_name', $topic)->first();
         if (!$progress) {
             throw new \Exception('Topic not found');
         }
-
+    
         // Tính toán level_id: (progress_id - 1) * 4 + node
         $levelId = (($progress->progress_id - 1) * 4) + $node;
         $level = Level::find($levelId);
-
+    
         if (!$level) {
             throw new \Exception('Level not found');
         }
-
-        // Kiểm tra xem user đã hoàn thành level trước đó chưa
+    
+        // Kiểm tra xem user đã hoàn thành tất cả các level của topic trước đó (nếu có)
+        if ($progress->progress_id > 1) {
+            $previousTopicProgress = Progress::where('progress_id', $progress->progress_id - 1)->first();
+            if ($previousTopicProgress) {
+                // Tính toán level_id cuối của topic trước đó
+                $lastLevelOfPreviousTopic = ($previousTopicProgress->progress_id - 1) * 4 + 4;
+                $completedLevels = YourLevel::where('user_id', $userId)
+                    ->where('level_id', '<=', $lastLevelOfPreviousTopic)
+                    ->where('level_id', '>=', ($previousTopicProgress->progress_id - 1) * 4 + 1)
+                    ->pluck('level_id')
+                    ->toArray();
+    
+                // Kiểm tra xem tất cả 4 level của topic trước đã hoàn thành chưa
+                for ($i = ($previousTopicProgress->progress_id - 1) * 4 + 1; $i <= $lastLevelOfPreviousTopic; $i++) {
+                    if (!in_array($i, $completedLevels)) {
+                        throw new \Exception('You must complete all levels of the previous topic before starting this one');
+                    }
+                }
+            }
+        }
+    
+        // Kiểm tra xem user đã hoàn thành level trước đó trong cùng topic (nếu node > 1)
         if ($node > 1) {
-            $previousLevelId = (($progress->progress_id - 1) * 4) + ($node - 1);
-            $previousLevel = YourLevel::where('user_id', $userId)
-                ->where('level_id', $previousLevelId)
-                ->first();
-
-            if (!$previousLevel) {
+            $previousLevels = YourLevel::where('user_id', $userId)
+                ->where('level_id', $levelId - 1)
+                ->pluck('level_id')
+                ->toArray();
+    
+            if (!in_array($levelId - 1, $previousLevels)) {
                 throw new \Exception('You must complete the previous level before this one');
             }
         }
-
+    
         // Kiểm tra xem user đã hoàn thành level này chưa
         $existing = YourLevel::where('user_id', $userId)
             ->where('level_id', $levelId)
             ->first();
-
+    
         if ($existing) {
             throw new \Exception('Level already completed by user');
         }
-
+    
         // Lưu thông tin level hoàn thành vào bảng your_level
         YourLevel::create([
             'user_id' => $userId,
             'level_id' => $levelId,
         ]);
+    
+        // Thêm các từ trong level vào bảng your_dictionary
         $words = $level->words; // Lấy danh sách các từ trong level
         foreach ($words as $word) {
+            // Tìm từ trong bảng dictionary dựa trên word
+            $dictionaryWord = Dictionary::where('word', $word->word)->first();
+    
+            if (!$dictionaryWord) {
+                throw new \Exception("Word '{$word->word}' not found in dictionary");
+            }
+    
             // Kiểm tra xem từ đã tồn tại trong your_dictionary chưa
             $existingWord = Your_Dictionary::where('user_id', $userId)
-                ->where('dictionary_id', $word->id)
+                ->where('dictionary_id', $dictionaryWord->dictionary_id)
                 ->first();
-
+    
             if (!$existingWord) {
                 Your_Dictionary::create([
                     'user_id' => $userId,
-                    'dictionary_id' => $word->id,
+                    'dictionary_id' => $dictionaryWord->dictionary_id,
                     'created_at' => now(),
                 ]);
             }
         }
+    
+        // Cập nhật điểm cho người dùng
         $userFresh = User::find($user->user_id);
         $userFresh->point += 10;
         $userFresh->save();
-
+    
         return [
             'message' => 'Level completed successfully',
             'level_id' => $levelId,
