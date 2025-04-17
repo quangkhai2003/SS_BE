@@ -81,6 +81,7 @@ Route::group([
     Route::post('/updateWord', [RoadMapController::class,'UpdateWord'])->middleware('checkrole:Admin');
     Route::post('/CreateProgress', [RoadMapController::class,'CreateProgress'])->middleware('checkrole:Admin');
     Route::post('/AddWordsToLevel', [RoadMapController::class,'AddWordsToLevel'])->middleware('checkrole:Admin');
+    Route::get('/getAllDictionary', [DictionaryController::class, 'getAllDictionary'])->middleware('checkrole:Admin');
 });
 
     

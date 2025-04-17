@@ -47,4 +47,9 @@ class DictionaryController extends Controller
         $result = $this->dictionaryService->getYourDictionary($request->bearerToken());
         return $result;
     }
+    public function getAllDictionary()
+    {
+        $words = $this->dictionaryService->getAllDictionary();    
+        return DictionaryResource::collection($words);
+    }
 }

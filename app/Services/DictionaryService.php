@@ -123,4 +123,9 @@ class DictionaryService
     
         return $result;
     }
+    public function getAllDictionary()
+    {
+        // Lấy toàn bộ dữ liệu từ bảng dictionary
+        return Dictionary::all();
+    }
 }
