@@ -23,6 +23,7 @@ class Dictionary extends Model
      * @var array
      */
     protected $fillable = [
+        'dictionary_id',
         'word',
         'ipa',
         'word_type',

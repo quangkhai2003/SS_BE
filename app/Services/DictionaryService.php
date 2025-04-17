@@ -25,4 +25,7 @@ class DictionaryService
     
         return $result;
     }
+    public function getWordbyTopic(String $topic) {
+        return Dictionary::where('topic', $topic)->get();
+    }
 }

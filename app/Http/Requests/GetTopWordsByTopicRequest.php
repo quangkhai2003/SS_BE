@@ -13,6 +13,16 @@ class GetTopWordsByTopicRequest extends FormRequest
 
     public function rules()
     {
-        return []; // Hiện tại không có quy tắc vì không có input
+        return [
+            'topic' => 'required|string|max:255', // Kiểm tra topic là chuỗi và không quá 255 ký tự
+        ]; // Hiện tại không có quy tắc vì không có input
+    }
+    public function messages()
+    {
+        return [
+            'topic.required' => 'The topic field is required.',
+            'topic.string' => 'The topic must be a string.',
+            'topic.max' => 'The topic may not be greater than 255 characters.',
+        ];
     }
 }

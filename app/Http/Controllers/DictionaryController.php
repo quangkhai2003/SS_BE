@@ -24,4 +24,17 @@ class DictionaryController extends Controller
         
         return $data;
     }
+    public function getWordbyTopic(GetTopWordsByTopicRequest $request)
+    {
+        $topic = $request->topic;
+        $words = $this->dictionaryService->getWordbyTopic($topic);
+
+        if ($words->isEmpty()) {
+            return response()->json([
+                'message' => 'No words found for the given topic',
+            ], 404);
+        }
+
+        return DictionaryResource::collection($words);
+    }
 }

@@ -46,6 +46,7 @@ Route::group([
     Route::post('/audio',[FApiController::class,'audio']);  
     Route::post('/generate',[FApiController::class,'generate']);
     Route::get('/getTopWordsByTopic', [DictionaryController::class, 'getTopWordsByTopic']);
+    Route::post('/getWordbyTopic', [DictionaryController::class, 'getWordbyTopic' ]);
 });
 
 Route::group([
