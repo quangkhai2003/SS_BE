@@ -57,8 +57,11 @@ Route::group([
     Route::get('/getDictionary', [DictionaryController::class, 'getTopWordsByTopic']);
     Route::post('/getWordbyToppic', [DictionaryController::class, 'getWordbyToppic']);
     Route::post('/getUserLevel', [RoadMapController::class, 'GetUserLevel'])->middleware('checkrole:User');
+    Route::post('/GetUserHighestLevel', [RoadMapController::class, 'GetUserHighestLevel'])->middleware('checkrole:User');
     Route::post('/addWordToYourDictionary', [DictionaryController::class, 'addWordToYourDictionary'])->middleware('checkrole:User');
     Route::get('/getYourDictionary', [DictionaryController::class, 'getYourDictionary'])->middleware('checkrole:User');
+    Route::post('/addWordToYourDictionaryGuest', [DictionaryController::class, 'addWordToYourDictionary'])->middleware('checkrole:Guest');
+    Route::get('/getYourDictionaryGuest', [DictionaryController::class, 'getYourDictionary'])->middleware('checkrole:Guest');
 });
 
 Route::group([
