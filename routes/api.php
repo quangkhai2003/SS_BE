@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\FApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +44,7 @@ Route::group([
     Route::post('/getLesson4', [RoadMapController::class,'GetLesson4']);
     Route::post('/getWordLevel', [RoadMapController::class,'GetWordLevel']);
     Route::post('/getWordTopic', [RoadMapController::class,'GetWordTopic']);
-    Route::get('/getAllWords', [RoadMapController::class,'GetAllWords']);
+    
     Route::post('/getWord', [RoadMapController::class,'GetWord']);
     Route::post('/completeLevel', [RoadMapController::class,'completeLevel'])->middleware('checkrole:User');
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
@@ -57,8 +58,13 @@ Route::group([
     Route::get('/getDictionary', [DictionaryController::class, 'getTopWordsByTopic']);
     Route::post('/getWordbyTopic', [DictionaryController::class, 'getWordbyToppic']);
     Route::post('/getUserLevel', [RoadMapController::class, 'GetUserLevel'])->middleware('checkrole:User');
+    Route::post('/GetUserHighestLevel', [RoadMapController::class, 'GetUserHighestLevel'])->middleware('checkrole:User');
     Route::post('/addWordToYourDictionary', [DictionaryController::class, 'addWordToYourDictionary'])->middleware('checkrole:User');
     Route::get('/getYourDictionary', [DictionaryController::class, 'getYourDictionary'])->middleware('checkrole:User');
+    Route::post('/addWordToYourDictionaryGuest', [DictionaryController::class, 'addWordToYourDictionary'])->middleware('checkrole:Guest');
+    Route::get('/getYourDictionaryGuest', [DictionaryController::class, 'getYourDictionary'])->middleware('checkrole:Guest');
+    Route::get('/getAchievements', [AchievementController::class, 'getAchievements']);
+    Route::post('/suggestWord', [DictionaryController::class, 'suggestWord'])->middleware('checkrole:User');
 });
 
 Route::group([
@@ -76,8 +82,10 @@ Route::group([
     Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
     Route::post('/FApidetection',[FApiController::class,'Process'])->middleware('checkrole:Admin');
     Route::post('/updateWord', [RoadMapController::class,'UpdateWord'])->middleware('checkrole:Admin');
+    Route::get('/getAllWords', [RoadMapController::class,'GetAllWords'])->middleware('checkrole:Admin');
     Route::post('/CreateProgress', [RoadMapController::class,'CreateProgress'])->middleware('checkrole:Admin');
     Route::post('/AddWordsToLevel', [RoadMapController::class,'AddWordsToLevel'])->middleware('checkrole:Admin');
+    Route::get('/getAllDictionary', [DictionaryController::class, 'getAllDictionary'])->middleware('checkrole:Admin');
 });
 
     

@@ -20,6 +20,7 @@ class WordResource extends JsonResource
             'word' => $this->word,
             'image' => $this->image,
             'sound' => $this->sound,
+        
         ];
     }
 }

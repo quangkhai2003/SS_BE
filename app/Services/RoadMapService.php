@@ -480,4 +480,57 @@ class RoadMapService
         // Trả về danh sách các level
         return $levels;
     }
+    public function GetUserHighestLevel($token)
+    {
+        // Xác thực token và lấy thông tin user
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new \Exception('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+        if (!$user) {
+            throw new \Exception('User not authenticated');
+        }
+
+        $userId = $user->user_id;
+
+        // Lấy level cao nhất mà người dùng đã hoàn thành
+        $lastLevel = YourLevel::where('user_id', $userId)
+            ->with('level.progress') // Eager load thông tin level và progress
+            ->orderBy('level_id', 'desc') // Sắp xếp giảm dần theo level_id
+            ->first();
+
+        // Nếu không có level nào, trả về level đầu tiên
+        if (!$lastLevel) {
+            $firstProgress = Progress::orderBy('progress_id', 'asc')->first();
+            if (!$firstProgress) {
+                throw new \Exception('No progress found in the system');
+            }
+
+            return [
+                'topic' => $firstProgress->topic_name,
+                'node' => 1, // Bắt đầu từ node đầu tiên
+            ];
+        }
+
+        // Tính toán level tiếp theo
+        $levelId = $lastLevel->level->level_id + 1; // Level cao nhất +1
+        $nextLevel = Level::where('level_id', $levelId)->with('progress')->first();
+
+        // Kiểm tra nếu level tiếp theo không tồn tại
+        if (!$nextLevel) {
+            throw new \Exception('No next level available');
+        }
+
+        // Tính toán topic và node của level tiếp theo
+        $node = ($levelId - 1) % 4 + 1; // Tính node (1, 2, 3, hoặc 4)
+        $topic = $nextLevel->progress->topic_name;
+
+        // Trả về topic và node của level tiếp theo
+        return [
+            'topic' => $topic,
+            'node' => $node,
+        ];
+    }
 }
