@@ -55,7 +55,7 @@ Route::group([
     Route::post('/audio',[FApiController::class,'audio']);  
     Route::post('/generate',[FApiController::class,'generate']);
     Route::get('/getDictionary', [DictionaryController::class, 'getTopWordsByTopic']);
-    Route::post('/getWordbyToppic', [DictionaryController::class, 'getWordbyToppic']);
+    Route::post('/getWordbyTopic', [DictionaryController::class, 'getWordbyToppic']);
     Route::post('/getUserLevel', [RoadMapController::class, 'GetUserLevel'])->middleware('checkrole:User');
     Route::post('/addWordToYourDictionary', [DictionaryController::class, 'addWordToYourDictionary'])->middleware('checkrole:User');
     Route::get('/getYourDictionary', [DictionaryController::class, 'getYourDictionary'])->middleware('checkrole:User');
