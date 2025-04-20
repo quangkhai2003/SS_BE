@@ -88,7 +88,9 @@ class RoadMapController extends Controller
     {
         $result = $this->levelService->GetUserLevel($request->bearerToken());
         return UserLevelResource::collection($result);
-    }public function GetUserHighestLevel(Request $request)
+    }
+    
+    public function GetUserHighestLevel(Request $request)
     {
         $result = $this->levelService->GetUserHighestLevel($request->bearerToken());
         return  UserLevelResource::make($result);

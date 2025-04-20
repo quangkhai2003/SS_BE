@@ -128,4 +128,34 @@ class DictionaryService
         // Lấy toàn bộ dữ liệu từ bảng dictionary
         return Dictionary::all();
     }
+    public function suggestWord($token, $topic)
+    {
+       // Xác thực token và lấy thông tin user
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new \Exception('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+        if (!$user) {
+            throw new \Exception('User not authenticated');
+        }
+
+        // Lấy danh sách các từ đã có trong your_dictionary của user
+        $userDictionaryIds = Your_Dictionary::where('user_id', $user->user_id)
+            ->pluck('dictionary_id')
+            ->toArray();
+
+        // Lấy một từ mới trong topic được chọn mà chưa có trong your_dictionary
+        $suggestedWord = Dictionary::where('topic', $topic)
+            ->whereNotIn('dictionary_id', $userDictionaryIds) // Loại bỏ các từ đã có
+            ->first(['dictionary_id', 'word', 'ipa', 'word_type', 'vietnamese', 'examples', 'examples_vietnamese', 'topic']);
+
+        // Kiểm tra nếu không có từ nào để gợi ý
+        if (!$suggestedWord) {
+            throw new \Exception('No new words to suggest for this topic');
+        }
+
+        return $suggestedWord;
+    }
 }
