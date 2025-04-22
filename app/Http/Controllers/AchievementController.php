@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AchievementsResources;
+use App\Http\Resources\CheckAchievementsResources;
+use App\Http\Resources\UserStatsResource;
 use App\Services\AchievementService;
 use Illuminate\Http\Request;
 
@@ -13,9 +16,19 @@ class AchievementController extends Controller
     {
         $this->achievementService = $achievementService;
     }
-    public function getAchievements(Request $request)
+    public function getAchievements()
     {
         $achievements = $this->achievementService->getAllAchievements();
-        return ($achievements);
+        return AchievementsResources::collection($achievements);
+    }
+    public function checkUserStats(Request $request)
+    {
+        $userStats = $this->achievementService->checkUserStats($request->bearerToken());
+        return UserStatsResource::make($userStats);
+    }
+    public function checkAndInsertAchievements(Request $request)
+    {
+        $userAchievements = $this->achievementService->checkAndInsertAchievements($request->bearerToken());
+        return CheckAchievementsResources::collection($userAchievements);
     }
 }

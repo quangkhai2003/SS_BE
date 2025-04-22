@@ -113,5 +113,32 @@ class AdminService
         $this->userService->delete($user->user_id);
         return "deleted successfully";
     }
+    public function updateByEmail($data)
+    {
+        $user = User::where('user_id', $data['user_id'])->firstOrFail();
+
+        // Cập nhật các trường cần thiết
+        $user->username = $data['username'] ?? $user->username;
+        $user->email = $data['email'] ?? $user->email; // Cho phép cập nhật email mới
+        $user->role = $data['role'] ?? $user->role;
+
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+
+        $user->save();
+
+        return $user;
+    }
+    public function AddUser($data)
+    {
+        $user = User::create([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => 'User',
+        ]);
+        return $user;
+    }
 
 }

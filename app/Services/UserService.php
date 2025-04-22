@@ -37,9 +37,21 @@ class UserService
         if (!$user || $user->role !== 'User' || !Hash::check($data['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials or not an user');
         }
-
+    
+        // Check if last_login_at is null or on a different day
+        $today = now()->startOfDay();
+        $lastLoginDay = $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->startOfDay() : null;
+    
+        if (!$lastLoginDay || $lastLoginDay->lt($today)) {
+            $user->increment('study_day');
+        }
+    
+        // Update last_login_at to the current timestamp
+        $user->last_login_at = now();
+        $user->save();
+    
         $tokens = $this->jwtService->generateToken($user);
-
+    
         return [
             'access_token' => $tokens['access_token'],
             'refresh_token' => $tokens['refresh_token'],
@@ -85,4 +97,5 @@ class UserService
         ->take(50)
         ->get(['username', 'point']); // Chỉ lấy các cột cần thiết
     }
+    
 }
