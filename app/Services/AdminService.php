@@ -102,18 +102,18 @@ class AdminService
 
         return $users;
     }
-    public function deleteByEmail($email)
+    public function deleteUser($data)
     {
         // Tìm user theo email
-        $user = User::where('email', $email)->first();
+        $user = User::where('user_id', $data['user_id'])->first();
         if (!$user) {
-            throw new \Exception('User with email ' . $email . ' not found');
+            throw new \Exception('User with id ' . $data['user_id'] . ' not found');
         }
         // Xóa user
         $this->userService->delete($user->user_id);
-        return "deleted successfully";
+        return ["Delete successfully"];
     }
-    public function updateByEmail($data)
+    public function updateUser($data)
     {
         $user = User::where('user_id', $data['user_id'])->firstOrFail();
 
@@ -121,6 +121,7 @@ class AdminService
         $user->username = $data['username'] ?? $user->username;
         $user->email = $data['email'] ?? $user->email; // Cho phép cập nhật email mới
         $user->role = $data['role'] ?? $user->role;
+        $user->updated_at = now();
 
         if (!empty($data['password'])) {
             $user->password = Hash::make($data['password']);

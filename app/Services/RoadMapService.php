@@ -35,17 +35,29 @@ class RoadMapService
         if (!$words) {
             return false;
         }
+
+        // Lấy danh sách hình ảnh từ các từ
         $optionsImages = $words->pluck('image')->toArray();
-        $optionsWords = $words->pluck('word')->toArray();
-        // Tạo 4 bài tập
+
+        // Trộn ngẫu nhiên mảng hình ảnh
+        shuffle($optionsImages);
+
+        // Lấy 4 hình ảnh ngẫu nhiên
+        $options = array_slice($optionsImages, 0, 4);
+
+        // Đảm bảo trộn lại vị trí của các options
+        shuffle($options);
+
+        // Tạo bài tập
         $lessons = [];
         $lessons[] = [
             'lesson_id' => 1,
             'type' => 'listen_and_choose_image',
             'sound' => $words[0]->sound,
-            'options' => array_values(array_rand(array_flip($optionsImages), 4)), // 4 hình ngẫu nhiên
+            'options' => $options, // Các hình ảnh đã được trộn
             'correct_answer' => $words[0]->image,
         ];
+
         return $lessons;
     }
     public function GetLesson2($topic, $node)
@@ -67,17 +79,28 @@ class RoadMapService
         if (!$words) {
             return false;
         }
-        $optionsImages = $words->pluck('image')->toArray();
+        // Lấy danh sách từ và hình ảnh
         $optionsWords = $words->pluck('word')->toArray();
-        // Tạo 4 bài tập
+
+        // Trộn ngẫu nhiên mảng từ
+        shuffle($optionsWords);
+
+        // Lấy 4 từ ngẫu nhiên
+        $options = array_slice($optionsWords, 0, 4);
+
+        // Đảm bảo trộn lại vị trí của các options
+        shuffle($options);
+
+        // Tạo bài tập
         $lessons = [];
         $lessons[] = [
             'lesson_id' => 2,
             'type' => 'view_image_and_choose_word',
-            'image' => $words[1]->image,
-            'options' => array_values(array_rand(array_flip($optionsWords), 4)), // 4 từ ngẫu nhiên
-            'correct_answer' => $words[1]->word,
+            'image' => $words[1]->image, // Hình ảnh của từ cần đoán
+            'options' => $options, // Các từ đã được trộn
+            'correct_answer' => $words[1]->word, // Đáp án đúng
         ];
+
         return $lessons;
     }
     public function GetLesson3($topic, $node)
@@ -130,17 +153,28 @@ class RoadMapService
         if (!$words) {
             return false;
         }
+        // Lấy danh sách hình ảnh từ các từ
         $optionsImages = $words->pluck('image')->toArray();
-        $optionsWords = $words->pluck('word')->toArray();
-        // Tạo 4 bài tập
+
+        // Trộn ngẫu nhiên mảng hình ảnh
+        shuffle($optionsImages);
+
+        // Lấy 4 hình ảnh ngẫu nhiên
+        $options = array_slice($optionsImages, 0, 4);
+
+        // Đảm bảo trộn lại vị trí của các options
+        shuffle($options);
+
+        // Tạo bài tập
         $lessons = [];
         $lessons[] = [
             'lesson_id' => 4,
             'type' => 'read_word_and_choose_image',
-            'word' => $words[3]->word,
-            'options' => array_values(array_rand(array_flip($optionsImages), 4)), // 4 hình ngẫu nhiên
-            'correct_answer' => $words[3]->image,
+            'word' => $words[3]->word, // Từ cần đoán
+            'options' => $options, // Các hình ảnh đã được trộn
+            'correct_answer' => $words[3]->image, // Đáp án đúng
         ];
+
         return $lessons;
     }
     public function GetWordLevel($topic, $node)
@@ -605,7 +639,6 @@ class RoadMapService
 
         return [
             'message' => 'You have opened the mystery chest and earned 50 points!',
-            'current_points' => $user->point,
         ];
     }
 }

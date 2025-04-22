@@ -93,8 +93,8 @@ Route::group([
     Route::post('/getUser', [AdminController::class, 'getUser'])->middleware('checkrole:Admin');
     Route::get('/getAllUser', [AdminController::class, 'getAllUser'])->middleware('checkrole:Admin');
     Route::post('/getUsersByRole', [AdminController::class, 'getUsersByRole'])->middleware('checkrole:Admin');
-    Route::post('/deleteByEmail', [AdminController::class, 'deleteByEmail'])->middleware('checkrole:Admin');
-    Route::post('/updateByEmail', [AdminController::class, 'updateByEmail'])->middleware('checkrole:Admin');
+    Route::delete('/deleteUser', [AdminController::class, 'deleteUser'])->middleware('checkrole:Admin');
+    Route::put('/updateUser', [AdminController::class, 'updateUser'])->middleware('checkrole:Admin');
     Route::post('/addUser', [AdminController::class, 'AddUser'])->middleware('checkrole:Admin');
 
     // AuthController
@@ -106,9 +106,11 @@ Route::group([
     // RoadMapController
     Route::post('/updateWord', [RoadMapController::class, 'UpdateWord'])->middleware('checkrole:Admin');
     Route::get('/getAllWords', [RoadMapController::class, 'GetAllWords'])->middleware('checkrole:Admin');
-    Route::post('/CreateProgress', [RoadMapController::class, 'CreateProgress'])->middleware('checkrole:Admin');
-    Route::post('/AddWordsToLevel', [RoadMapController::class, 'AddWordsToLevel'])->middleware('checkrole:Admin');
+    Route::post('/createProgress', [RoadMapController::class, 'CreateProgress'])->middleware('checkrole:Admin');
+    Route::post('/addWordsToLevel', [RoadMapController::class, 'AddWordsToLevel'])->middleware('checkrole:Admin');
 
     // DictionaryController
     Route::get('/getAllDictionary', [DictionaryController::class, 'getAllDictionary'])->middleware('checkrole:Admin');
+    Route::post('/addWordToDictionary', [DictionaryController::class, 'AddWordToDictionary'])->middleware('checkrole:Admin');
+    Route::put('/updateWordInDictionary', [DictionaryController::class, 'updateWordInDictionary'])->middleware('checkrole:Admin');
 });

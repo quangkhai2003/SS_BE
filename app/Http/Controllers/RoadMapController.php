@@ -13,6 +13,7 @@ use App\Http\Resources\Lesson2Resource;
 use App\Http\Resources\Lesson3Resource;
 use App\Http\Resources\Lesson4Resource;
 use App\Http\Resources\LessonResource;
+use App\Http\Resources\MessageResources;
 use App\Http\Resources\ProgressResources;
 use App\Http\Resources\UserLevelResource;
 use App\Http\Resources\WordResource;
@@ -102,7 +103,7 @@ class RoadMapController extends Controller
     public function OpenMysteryChest(Request $request)
     {
         $result = $this->levelService->OpenMysteryChest($request->bearerToken(), $request->topic);
-        return ($result);
+        return MessageResources::make($result);
     }
 
 }

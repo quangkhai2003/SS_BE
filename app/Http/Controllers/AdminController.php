@@ -60,13 +60,13 @@ class AdminController extends Controller
         $users = $this->adminService->getUsersByRole($request->role);
         return UserResource::collection($users);
     }
-    public function deleteByEmail(Request $request)
+    public function deleteUser(Request $request)
     {
-        return $this->adminService->deleteByEmail($request->email);   
+        return $this->adminService->deleteUser($request);   
     }
-    public function updateByEmail(UpdateUserRequest $request)
+    public function updateUser(UpdateUserRequest $request)
     {
-        $user = $this->adminService->updateByEmail($request->validated());
+        $user = $this->adminService->updateUser($request->validated());
         return UserResource::make($user);
     }
     public function AddUser(RegisterRequest $request)
