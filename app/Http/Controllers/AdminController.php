@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\RefreshResource;
 use App\Http\Resources\RegisterResource;
@@ -59,8 +60,18 @@ class AdminController extends Controller
         $users = $this->adminService->getUsersByRole($request->role);
         return UserResource::collection($users);
     }
-    public function deleteByEmail(Request $request)
+    public function deleteUser(Request $request)
     {
-        return $this->adminService->deleteByEmail($request->email);   
+        return $this->adminService->deleteUser($request);   
+    }
+    public function updateUser(UpdateUserRequest $request)
+    {
+        $user = $this->adminService->updateUser($request->validated());
+        return UserResource::make($user);
+    }
+    public function AddUser(RegisterRequest $request)
+    {
+        $user = $this->adminService->AddUser($request->validated());
+        return UserResource::make($user);
     }
 } 

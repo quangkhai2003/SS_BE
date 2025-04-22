@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddWordsToLevelRequest;
+use App\Http\Requests\AddWordToDictionaryRequest;
 use App\Http\Requests\DictionaryRequest;
 use Illuminate\Http\Request;
 use App\Services\DictionaryService;
 use App\Http\Resources\DictionaryResource;
 use App\Http\Requests\GetTopWordsByTopicRequest;
+use App\Http\Requests\updateWordInDictionaryRequest;
 use PSpell\Dictionary;
 
 class DictionaryController extends Controller
@@ -57,4 +60,15 @@ class DictionaryController extends Controller
         $suggestions = $this->dictionaryService->suggestWord($request->bearerToken(), $request->topic);
         return ($suggestions);
     }
+    public function AddWordToDictionary(AddWordToDictionaryRequest $request)
+    {
+        $result = $this->dictionaryService->AddWordToDictionary($request);
+        return DictionaryResource::make($result);
+    }
+    public function updateWordInDictionary(updateWordInDictionaryRequest $request)
+    {
+        $result = $this->dictionaryService->updateWordInDictionary($request);
+        return DictionaryResource::make($result);
+    }
+
 }

@@ -7,6 +7,7 @@ use App\Services\UserService;
 use App\Services\JwtService;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\RefreshResource;
 use App\Http\Resources\RegisterResource;
@@ -60,4 +61,5 @@ class AuthController extends Controller
         $topUsers = $this->userService->getTopUsers();
         return $topUsers;
     }
+    
 }

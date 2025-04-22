@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddWordsToLevelRequest;
+use App\Http\Requests\ProgressRequest;
 use App\Http\Requests\RoadMapRequest;
 use App\Http\Requests\WordRequest;
 use App\Http\Requests\WordUpdateRequest;
+use App\Http\Resources\AddWordsToLevelResources;
 use App\Http\Resources\Lesson1Resource;
 use App\Http\Resources\Lesson2Resource;
 use App\Http\Resources\Lesson3Resource;
 use App\Http\Resources\Lesson4Resource;
 use App\Http\Resources\LessonResource;
+use App\Http\Resources\MessageResources;
+use App\Http\Resources\ProgressResources;
 use App\Http\Resources\UserLevelResource;
 use App\Http\Resources\WordResource;
 use App\Services\RoadMapService;
@@ -74,15 +79,15 @@ class RoadMapController extends Controller
         $result = $this->levelService->CompleteLevel($request->bearerToken(), $request->topic, $request->node);
         return $result;
     }
-    public function CreateProgress(Request $request)
+    public function CreateProgress(ProgressRequest $request)
     {
-        $result = $this->levelService->CreateProgress($request->topic);
-        return $result;
+        $result = $this->levelService->CreateProgress($request->validated());
+        return ProgressResources::make($result);
     }
-    public function AddWordsToLevel(Request $request)
+    public function AddWordsToLevel(AddWordsToLevelRequest $request)
     {
-        $result = $this->levelService->AddWordsToLevel($request->levelId, $request->words);
-        return $result;
+        $result = $this->levelService->AddWordsToLevel($request->validated());
+        return AddWordsToLevelResources::make($result);
     }
     public function GetUserLevel(Request $request)
     {
@@ -95,4 +100,10 @@ class RoadMapController extends Controller
         $result = $this->levelService->GetUserHighestLevel($request->bearerToken());
         return  UserLevelResource::make($result);
     }
+    public function OpenMysteryChest(Request $request)
+    {
+        $result = $this->levelService->OpenMysteryChest($request->bearerToken(), $request->topic);
+        return MessageResources::make($result);
+    }
+
 }

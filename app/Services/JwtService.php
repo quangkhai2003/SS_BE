@@ -31,7 +31,7 @@ class JwtService
         try {
             JWTAuth::setToken($refreshToken);
             $claims = JWTAuth::getPayload()->toArray();
-
+            dd($claims);
             if (!isset($claims['refresh']) || !$claims['refresh']) {
                 return response()->json(['error' => 'Invalid refresh token'], 401);
             }

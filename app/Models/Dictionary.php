@@ -28,7 +28,7 @@ class Dictionary extends Model
         'word_type',
         'vietnamese',
         'examples',
-        'example_vietnamese',
+        'examples_vietnamese',
         'topic',
         'created_at',
     ];
