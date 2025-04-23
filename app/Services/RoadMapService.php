@@ -424,7 +424,24 @@ class RoadMapService
 
         return $progress;
     }
+    public function updateProgress($data)
+    {
+        // Tìm progress dựa trên progress_id
+        $progress = Progress::find($data['progress_id']);
 
+        // Kiểm tra xem progress có tồn tại không
+        if (!$progress) {
+            throw new \Exception('Progress not found');
+        }
+
+        // Cập nhật thông tin progress
+        $progress->update([
+            'topic_name' => $data['topic_name'] ?? $progress->topic_name,
+            'updated_at' => now(),
+        ]);
+
+        return $progress;
+    }
     public function AddWordsToLevel($data)
     {
         // Tìm level dựa trên level_id

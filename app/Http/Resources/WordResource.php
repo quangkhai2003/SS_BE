@@ -20,7 +20,8 @@ class WordResource extends JsonResource
             'word' => $this->word,
             'image' => $this->image,
             'sound' => $this->sound,
-        
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

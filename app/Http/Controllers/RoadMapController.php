@@ -84,6 +84,11 @@ class RoadMapController extends Controller
         $result = $this->levelService->CreateProgress($request->validated());
         return ProgressResources::make($result);
     }
+    public function updateProgress(Request $request)
+    {
+        $result = $this->levelService->updateProgress($request);
+        return ProgressResources::make($result);
+    }
     public function AddWordsToLevel(AddWordsToLevelRequest $request)
     {
         $result = $this->levelService->AddWordsToLevel($request->validated());

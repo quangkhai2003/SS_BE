@@ -18,6 +18,8 @@ class DictionaryResource extends JsonResource
             'topic' => $this->topic,
             'examples' => $this->examples,
             'examples_vietnamese' => $this->examples_vietnamese,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 
