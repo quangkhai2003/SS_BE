@@ -79,6 +79,7 @@ Route::group([
     Route::get('/getAchievements', [AchievementController::class, 'getAchievements']);
     Route::get('/checkUserStats', [AchievementController::class, 'checkUserStats'])->middleware('checkrole:User|Guest');
     Route::get('/checkAndInsertAchievements', [AchievementController::class, 'checkAndInsertAchievements'])->middleware('checkrole:User|Guest');
+    Route::post('/claimAchievement', [AchievementController::class, 'claimAchievement'])->middleware('checkrole:User|Guest');
 });
 
 Route::group([

@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Http\Resources\AchievementClaimResource;
+use App\Http\Resources\MessageResources;
 use App\Models\Achievement;
 use App\Models\Your_Dictionary;
 use App\Models\YourAchievement;
 use App\Models\YourLevel;
+use Tymon\JWTAuth\Claims\Claim;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AchievementService
@@ -111,14 +114,11 @@ class AchievementService
                 ->exists();
 
             if (!$exists && $status === 'complete') {
-                // Cộng điểm bonus_points vào point của user
-                $user->increment('point', $achievement->bonus_points);
-
                 // Thêm bản ghi vào bảng your_achievements
                 YourAchievement::create([
                     'user_id' => $user->user_id,
                     'achievement_id' => $achievement->achievement_id,
-                    'status' => $status,
+                    'status' => 'incomplete',
                     'created_at' => now()->startOfDay(),
                 ]);
             }
@@ -134,5 +134,49 @@ class AchievementService
         }
 
         return $result;
+    }
+    public function claimAchievement($token, $achievementId)
+    {
+        // Lấy user từ token
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new \Exception('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+        if (!$user) {
+            throw new \Exception('User not authenticated');
+        }
+
+        // Kiểm tra xem thành tích có tồn tại không
+        $achievement = Achievement::find($achievementId);
+        if (!$achievement) {
+            return MessageResources::createMessageResource('Achievement not found');
+        }
+
+        // Kiểm tra trạng thái thành tích của người dùng
+        $userAchievement = YourAchievement::where('user_id', $user->user_id)
+            ->where('achievement_id', $achievementId)
+            ->first();
+
+        if (!$userAchievement) {
+            return MessageResources::createMessageResource('Achievement not found for this user');
+        }
+        if ($userAchievement->status === 'complete') {
+            return MessageResources::createMessageResource('Achievement already claimed');
+        }
+        // Cập nhật trạng thái thành tích thành "complete"
+        $userAchievement->status = 'complete';
+        $userAchievement->save();
+        $bonus_points = $achievement->bonus_points ?? 0; // Giả sử bảng achievements có cột reward_points
+        $user->point = ($user->point ?? 0) + $bonus_points;
+        $user->save();
+
+        $result = [
+            'achievement_id' => $achievementId,
+            'achievement_sticker' => $achievement->sticker,
+            'status' => 'complete',
+        ];
+        return AchievementClaimResource::make($result);
     }
 }

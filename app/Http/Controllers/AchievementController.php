@@ -31,4 +31,9 @@ class AchievementController extends Controller
         $userAchievements = $this->achievementService->checkAndInsertAchievements($request->bearerToken());
         return CheckAchievementsResources::collection($userAchievements);
     }
+    public function claimAchievement(Request $request)
+    {
+        $userAchievements = $this->achievementService->claimAchievement($request->bearerToken(), $request->achievement_id);
+        return ($userAchievements);
+    }
 }
