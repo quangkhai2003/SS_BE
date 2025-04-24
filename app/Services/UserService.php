@@ -37,28 +37,28 @@ class UserService
         if (!$user || $user->role !== 'User' || !Hash::check($data['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials or not an user');
         }
-    
+
         // Check if last_login_at is null or on a different day
         $today = now()->startOfDay();
         $lastLoginDay = $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->startOfDay() : null;
-    
+
         if (!$lastLoginDay || $lastLoginDay->lt($today)) {
             $user->increment('study_day');
         }
-    
+
         // Update last_login_at to the current timestamp
         $user->last_login_at = now();
         $user->save();
-    
+
         $tokens = $this->jwtService->generateToken($user);
-    
+
         return [
             'access_token' => $tokens['access_token'],
             'refresh_token' => $tokens['refresh_token'],
         ];
     }
 
-    public function logout():JsonResponse
+    public function logout(): JsonResponse
     {
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
@@ -66,7 +66,6 @@ class UserService
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to logout'], 500);
         }
-        
     }
 
     public function getProfile($token)
@@ -81,7 +80,26 @@ class UserService
         }
 
         $user = JWTAuth::user();
-        return $user;
+
+        // Tính thứ hạng của người dùng
+        $rank = User::where('point', '>', $user->point)
+            ->whereIn('role', ['User', 'Guest'])
+            ->count() + 1;
+
+
+        return response()->json([
+            'user' => [
+                'user_id' => $user->user_id,
+                'username'=> $user->username,
+                'email'=> $user->email,
+                'avatar'=> $user->avatar,
+                'point'=> $user->point,
+                'role'=> $user->role,
+                'study_day'=> $user->study_day,
+                'last_login_at'=> $user->last_login_at,
+                'rank' => $rank,
+            ],
+        ]);
     }
     public function delete($id)
     {
@@ -93,9 +111,8 @@ class UserService
     {
         // Lấy 50 user có điểm cao nhất, chỉ lấy role là User hoặc Guest
         return User::whereIn('role', ['User', 'Guest'])
-        ->orderBy('point', 'desc')
-        ->take(50)
-        ->get(['username', 'point']); // Chỉ lấy các cột cần thiết
+            ->orderBy('point', 'desc')
+            ->take(50)
+            ->get(['username', 'point']); // Chỉ lấy các cột cần thiết
     }
-    
 }

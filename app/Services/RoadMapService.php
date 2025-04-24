@@ -249,15 +249,25 @@ class RoadMapService
     }
     public function GetAllWords()
     {
-        // Lấy tất cả các từ từ bảng Word
-        $allWords = Word::all();
+        // Lấy tất cả các từ từ bảng Word cùng với thông tin topic
+        $allWords = Word::with('level.progress')->get();
 
         if ($allWords->isEmpty()) {
             throw new \Exception('No words found');
         }
 
-        // Trả về tất cả các từ dưới dạng collection
-        return $allWords;
+        // Định dạng dữ liệu trả về
+        $result = $allWords->map(function ($word) {
+            return [
+                'word' => $word->word,
+                'image' => $word->image,
+                'sound' => $word->sound,
+                'level_id' => $word->level->level_id, // Lấy id level
+                'topic' => $word->level->progress->topic_name, // Lấy tên topic
+            ];
+        });
+
+        return $result;
     }
     public function updateWord($data)
     {
