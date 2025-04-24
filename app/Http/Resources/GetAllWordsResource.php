@@ -15,11 +15,14 @@ class GetAllWordsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id_word' => $this['id_word'],
+            'id_level' => $this['id_level'],
             'word' => $this['word'],
             'image' => $this['image'],
             'sound' => $this['sound'],
-            'level_id' => $this['level_id'], // Lấy id level nếu tồn tại
-            'topic' => $this['topic'], // Lấy tên topic nếu tồn tại
+            'created_at' => $this['created_at'],
+            'updated_at' => $this['updated_at'],
+            'topic' => $this['topic'],
         ];
     }
 }

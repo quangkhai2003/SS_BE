@@ -259,11 +259,14 @@ class RoadMapService
         // Định dạng dữ liệu trả về
         $result = $allWords->map(function ($word) {
             return [
+                'id_word' => $word->id_word,
+                'id_level' => $word->id_level,
                 'word' => $word->word,
                 'image' => $word->image,
                 'sound' => $word->sound,
-                'level_id' => $word->level->level_id, // Lấy id level
-                'topic' => $word->level->progress->topic_name, // Lấy tên topic
+                'created_at' => $word->created_at,
+                'updated_at' => $word->updated_at,
+                'topic' => $word->level->progress->topic_name, // Lấy tên topic từ quan hệ
             ];
         });
 
