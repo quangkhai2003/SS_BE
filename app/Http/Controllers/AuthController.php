@@ -54,7 +54,7 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
         $user = $this->userService->getProfile($request->bearerToken());
-        return UserResource::make($user);
+        return ($user);
     }
     public function getLeaderboard()
     {

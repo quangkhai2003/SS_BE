@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddUserRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -69,7 +70,7 @@ class AdminController extends Controller
         $user = $this->adminService->updateUser($request->validated());
         return UserResource::make($user);
     }
-    public function AddUser(RegisterRequest $request)
+    public function AddUser(AddUserRequest $request)
     {
         $user = $this->adminService->AddUser($request->validated());
         return UserResource::make($user);

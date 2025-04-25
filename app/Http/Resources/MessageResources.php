@@ -19,4 +19,17 @@ class MessageResources extends JsonResource
             'message' => $this['message'],
         ];
     }
+    /**
+     * Tạo resource từ thông báo.
+     *
+     * @param string $message
+     * @return array<string, mixed>
+     */
+    public static function createMessageResource($message)
+    {
+        // Create a message resource array
+        return [
+            'message' => $message,
+        ];
+    }
 }

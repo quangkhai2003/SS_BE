@@ -8,6 +8,7 @@ use App\Http\Requests\RoadMapRequest;
 use App\Http\Requests\WordRequest;
 use App\Http\Requests\WordUpdateRequest;
 use App\Http\Resources\AddWordsToLevelResources;
+use App\Http\Resources\GetAllWordsResource;
 use App\Http\Resources\Lesson1Resource;
 use App\Http\Resources\Lesson2Resource;
 use App\Http\Resources\Lesson3Resource;
@@ -62,7 +63,7 @@ class RoadMapController extends Controller
     public function GetAllWords()
     {
         $Words = $this->levelService->GetAllWords();
-        return WordResource::collection($Words);
+        return GetAllWordsResource::collection($Words);
     }
     public function GetWord(Request $request)
     {
@@ -82,6 +83,11 @@ class RoadMapController extends Controller
     public function CreateProgress(ProgressRequest $request)
     {
         $result = $this->levelService->CreateProgress($request->validated());
+        return ProgressResources::make($result);
+    }
+    public function updateProgress(Request $request)
+    {
+        $result = $this->levelService->updateProgress($request);
         return ProgressResources::make($result);
     }
     public function AddWordsToLevel(AddWordsToLevelRequest $request)
