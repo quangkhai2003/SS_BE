@@ -82,38 +82,41 @@ class AchievementService
         foreach ($achievements as $achievement) {
             $requirement = (int) $achievement->requirement;
             $progress = 0; // Tiến trình hiện tại
-            $status = 'incomplete';
-
+            $calculatedStatus = 'incomplete'; // Trạng thái tính toán dựa trên tiến trình
+        
             // Kiểm tra điều kiện dựa trên type
             switch ($achievement->type) {
                 case 'Date':
                     $progress = $userStats['study_day'];
                     if ($progress >= $requirement) {
-                        $status = 'complete';
+                        $calculatedStatus = 'complete';
                         $progress = $requirement; // Đảm bảo hiển thị req/req khi complete
                     }
                     break;
                 case 'Level':
                     $progress = $userStats['highest_level'];
                     if ($progress >= $requirement) {
-                        $status = 'complete';
+                        $calculatedStatus = 'complete';
                         $progress = $requirement; // Đảm bảo hiển thị req/req khi complete
                     }
                     break;
                 case 'Word':
                     $progress = $userStats['word_count'];
                     if ($progress >= $requirement) {
-                        $status = 'complete';
+                        $calculatedStatus = 'complete';
                         $progress = $requirement; // Đảm bảo hiển thị req/req khi complete
                     }
                     break;
             }
-            // Kiểm tra nếu achievement đã được ghi nhận
-            $exists = YourAchievement::where('user_id', $user->user_id)
+        
+            // Lấy trạng thái từ bảng YourAchievement
+            $userAchievement = YourAchievement::where('user_id', $user->user_id)
                 ->where('achievement_id', $achievement->achievement_id)
-                ->exists();
-
-            if (!$exists && $status === 'complete') {
+                ->first();
+        
+            $dbStatus = $userAchievement ? $userAchievement->status : 'incomplete';
+        
+            if (!$userAchievement && $calculatedStatus === 'complete') {
                 // Thêm bản ghi vào bảng your_achievements
                 YourAchievement::create([
                     'user_id' => $user->user_id,
@@ -122,14 +125,15 @@ class AchievementService
                     'created_at' => now()->startOfDay(),
                 ]);
             }
-
+        
             // Thêm thông tin achievement vào kết quả
             $result[] = [
                 'achievement_id' => $achievement->achievement_id,
                 'name' => $achievement->name,
                 'type' => $achievement->type,
                 'progress' => "{$progress}/{$requirement}",
-                'status' => $status,
+                'status' => $calculatedStatus, // Trạng thái tính toán
+                'status_claim' => $dbStatus, // Trạng thái từ bảng YourAchievement
             ];
         }
 
