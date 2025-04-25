@@ -52,8 +52,8 @@ Route::group([
     Route::post('/getWord', [RoadMapController::class, 'GetWord']);
     Route::post('/completeLevel', [RoadMapController::class, 'completeLevel'])->middleware('checkrole:User|Guest');
     Route::post('/getUserLevel', [RoadMapController::class, 'GetUserLevel'])->middleware('checkrole:User|Guest');
-    Route::post('/GetUserHighestLevel', [RoadMapController::class, 'GetUserHighestLevel'])->middleware('checkrole:User|Guest');
-    Route::post('/OpenMysteryChest', [RoadMapController::class, 'OpenMysteryChest'])->middleware('checkrole:User|Guest');
+    Route::post('/getUserHighestLevel', [RoadMapController::class, 'GetUserHighestLevel'])->middleware('checkrole:User|Guest');
+    Route::post('/openMysteryChest', [RoadMapController::class, 'OpenMysteryChest'])->middleware('checkrole:User|Guest');
 
     // GuestController
     Route::post('/loginGuest', [GuestController::class, 'loginGuest']);
