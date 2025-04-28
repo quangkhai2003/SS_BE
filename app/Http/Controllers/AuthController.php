@@ -61,5 +61,14 @@ class AuthController extends Controller
         $topUsers = $this->userService->getTopUsers();
         return $topUsers;
     }
-    
+    public function checkIn7Day(Request $request)
+    {
+        $user = $this->userService->checkIn7Day($request->bearerToken());
+        return ($user);
+    }
+    public function updateAvatar(Request $request)
+    {
+        $user = $this->userService->updateAvatar($request->bearerToken(), $request->avatar);
+        return ($user);
+    }
 }

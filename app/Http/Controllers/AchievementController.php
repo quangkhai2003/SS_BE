@@ -36,4 +36,9 @@ class AchievementController extends Controller
         $userAchievements = $this->achievementService->claimAchievement($request->bearerToken(), $request->achievement_id);
         return ($userAchievements);
     }
+    public function getUserSticker(Request $request)
+    {
+        $userSticker = $this->achievementService->getUserSticker($request->bearerToken());
+        return ($userSticker);
+    }
 }

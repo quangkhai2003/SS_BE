@@ -41,6 +41,8 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:User');
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User|Guest');
     Route::get('/leaderboard', [AuthController::class, 'getLeaderboard']);
+//    Route::get('/checkIn7Day', [AuthController::class, 'checkIn7Day'])->middleware('checkrole:User|Guest');
+    Route::post('/updateAvatar', [AuthController::class, 'updateAvatar'])->middleware('checkrole:User|Guest');
 
     // RoadMapController
     Route::post('/getLesson1', [RoadMapController::class, 'GetLesson1']);
@@ -80,6 +82,7 @@ Route::group([
     Route::get('/checkUserStats', [AchievementController::class, 'checkUserStats'])->middleware('checkrole:User|Guest');
     Route::get('/checkAndInsertAchievements', [AchievementController::class, 'checkAndInsertAchievements'])->middleware('checkrole:User|Guest');
     Route::post('/claimAchievement', [AchievementController::class, 'claimAchievement'])->middleware('checkrole:User|Guest');
+    Route::get('/getUserSticker', [AchievementController::class, 'getUserSticker'])->middleware('checkrole:User|Guest');
 });
 
 Route::group([
