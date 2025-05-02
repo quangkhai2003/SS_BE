@@ -184,7 +184,6 @@ class DictionaryService
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        dd($newWord);
         return $newWord;
     }
     public function updateWordInDictionary($data)

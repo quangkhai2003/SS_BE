@@ -83,7 +83,7 @@ class AchievementService
             $requirement = (int) $achievement->requirement;
             $progress = 0; // Tiến trình hiện tại
             $calculatedStatus = 'incomplete'; // Trạng thái tính toán dựa trên tiến trình
-        
+
             // Kiểm tra điều kiện dựa trên type
             switch ($achievement->type) {
                 case 'Date':
@@ -108,14 +108,14 @@ class AchievementService
                     }
                     break;
             }
-        
+
             // Lấy trạng thái từ bảng YourAchievement
             $userAchievement = YourAchievement::where('user_id', $user->user_id)
                 ->where('achievement_id', $achievement->achievement_id)
                 ->first();
-        
+
             $dbStatus = $userAchievement ? $userAchievement->status : 'incomplete';
-        
+
             if (!$userAchievement && $calculatedStatus === 'complete') {
                 // Thêm bản ghi vào bảng your_achievements
                 YourAchievement::create([
@@ -125,7 +125,7 @@ class AchievementService
                     'created_at' => now()->startOfDay(),
                 ]);
             }
-        
+
             // Thêm thông tin achievement vào kết quả
             $result[] = [
                 'achievement_id' => $achievement->achievement_id,
@@ -182,5 +182,41 @@ class AchievementService
             'status' => 'complete',
         ];
         return AchievementClaimResource::make($result);
+    }
+    public function getUserSticker($token)
+    {
+        // Lấy user từ token
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new \Exception('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+        if (!$user) {
+            throw new \Exception('User not authenticated');
+        }
+
+        // Lấy danh sách các thành tích có trạng thái "complete"
+        $completedAchievements = YourAchievement::where('user_id', $user->user_id)
+            ->where('status', 'complete')
+            ->pluck('achievement_id');
+
+        // Lấy sticker từ bảng Achievement dựa trên danh sách achievement_id
+        $stickers = Achievement::whereIn('achievement_id', $completedAchievements)
+            ->pluck('sticker');
+
+        // Lấy tên và sticker từ bảng Achievement dựa trên danh sách achievement_id
+        $achievements = Achievement::whereIn('achievement_id', $completedAchievements)
+            ->get(['name', 'sticker']);
+
+        // Chuyển đổi thành định dạng {"name": "achievement_name", "sticker": "link"}
+        $result = $achievements->map(function ($achievement) {
+            return [
+                'name' => $achievement->name,
+                'sticker' => $achievement->sticker,
+            ];
+        });
+
+        return $result;
     }
 }

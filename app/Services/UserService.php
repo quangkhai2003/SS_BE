@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\MessageResources;
 use App\Models\User;
 use App\Services\JwtService;
 use Illuminate\Auth\AuthenticationException;
@@ -90,13 +91,13 @@ class UserService
         return response()->json([
             'user' => [
                 'user_id' => $user->user_id,
-                'username'=> $user->username,
-                'email'=> $user->email,
-                'avatar'=> $user->avatar,
-                'point'=> $user->point,
-                'role'=> $user->role,
-                'study_day'=> $user->study_day,
-                'last_login_at'=> $user->last_login_at,
+                'username' => $user->username,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'point' => $user->point,
+                'role' => $user->role,
+                'study_day' => $user->study_day,
+                'last_login_at' => $user->last_login_at,
                 'rank' => $rank,
             ],
         ]);
@@ -114,5 +115,82 @@ class UserService
             ->orderBy('point', 'desc')
             ->take(50)
             ->get(['username', 'point']); // Chỉ lấy các cột cần thiết
+    }
+    public function checkIn7Day($token)
+    {
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new AuthenticationException('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+
+        // Nếu study_day > 7, không có quà nữa
+        if ($user->study_day > 7) {
+            return MessageResources::createMessageResource('Bạn đã điểm danh 7 ngày rồi');
+        }
+
+        // Kiểm tra nếu `last_login_at` là hôm nay thì không cho điểm danh lại
+        $today = now()->startOfDay();
+        $lastLoginDay = $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->startOfDay() : null;
+
+        if ($lastLoginDay && $lastLoginDay->eq($today)) {
+            return MessageResources::createMessageResource('Bạn đã điểm danh hôm nay rồi');
+        }
+
+
+        // Tặng điểm theo mốc ngày
+        $bonusPoints = 0;
+        if ($user->study_day <= 7) { // Chỉ kiểm tra trong 7 ngày đầu
+            switch ($user->study_day) {
+                case 1:
+                    $bonusPoints = 20; // Ngày 1 tặng 20 điểm
+                    break;
+                case 3:
+                    $bonusPoints = 30; // Ngày 3 tặng 30 điểm
+                    break;
+                case 5:
+                    $bonusPoints = 50; // Ngày 5 tặng 50 điểm
+                    break;
+                case 7:
+                    $bonusPoints = 100; // Ngày 7 tặng 100 điểm
+                    break;
+            }
+
+            // Cộng điểm thưởng nếu có
+            if ($bonusPoints > 0) {
+                $user->increment('point', $bonusPoints);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Điểm danh thành công',
+            'study_day' => $user->study_day,
+            'bonus_points' => $bonusPoints,
+            'total_points' => $user->point,
+        ]);
+    }
+    public function updateAvatar($token, $avatar)
+    {
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new AuthenticationException('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+
+        // Kiểm tra tên avatar có hợp lệ không (avatar_0 đến avatar_29)
+        if (!preg_match('/^avatar_([0-9]|[1-2][0-9])$/', $avatar)) {
+            return response()->json(['error' => 'Invalid avatar name'], 400);
+        }
+
+        // Cập nhật avatar
+        $user->avatar = $avatar;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Avatar updated successfully',
+            'avatar' => $user->avatar,
+        ]);
     }
 }
