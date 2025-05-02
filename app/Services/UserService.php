@@ -25,6 +25,7 @@ class UserService
         $user = User::create([
             'username' => $data['username'],
             'email' => $data['email'],
+            'avatar' => 'default_avatar',
             'password' => Hash::make($data['password']),
         ]);
         return [
@@ -114,7 +115,7 @@ class UserService
         return User::whereIn('role', ['User', 'Guest'])
             ->orderBy('point', 'desc')
             ->take(50)
-            ->get(['username', 'point']); // Chỉ lấy các cột cần thiết
+            ->get(['avatar','username', 'point']); // Chỉ lấy các cột cần thiết
     }
     public function checkIn7Day($token)
     {
@@ -163,12 +164,11 @@ class UserService
             }
         }
 
-        return response()->json([
+        return [
             'message' => 'Điểm danh thành công',
             'study_day' => $user->study_day,
             'bonus_points' => $bonusPoints,
-            'total_points' => $user->point,
-        ]);
+        ];
     }
     public function updateAvatar($token, $avatar)
     {
@@ -188,9 +188,9 @@ class UserService
         $user->avatar = $avatar;
         $user->save();
 
-        return response()->json([
+        return [
             'message' => 'Avatar updated successfully',
             'avatar' => $user->avatar,
-        ]);
+        ];
     }
 }

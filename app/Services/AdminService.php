@@ -137,6 +137,7 @@ class AdminService
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'avatar' => 'default_avatar',
             'role' => $data['role'],
         ]);
         return $user;
