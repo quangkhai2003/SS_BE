@@ -34,8 +34,8 @@ class GuestService
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'avatar' => 'default_avatar', 
             'role' => 'Guest',
-            'last_login_at' => now(),
         ]);
         $tokens = $this->jwtService->generateToken($user);
 
