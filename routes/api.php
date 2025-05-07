@@ -42,6 +42,7 @@ Route::group([
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User|Guest');
     Route::get('/leaderboard', [AuthController::class, 'getLeaderboard']);
     Route::get('/checkIn7Day', [AuthController::class, 'checkIn7Day'])->middleware('checkrole:User|Guest');
+    Route::get('/getCheckInDays', [AuthController::class, 'getCheckInDays'])->middleware('checkrole:User|Guest');
     Route::post('/updateAvatar', [AuthController::class, 'updateAvatar'])->middleware('checkrole:User|Guest');
 
     // RoadMapController

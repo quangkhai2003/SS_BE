@@ -106,68 +106,79 @@ class UserService
             ->get(['avatar', 'username', 'point']); // Chỉ lấy các cột cần thiết
     }
     public function checkIn7Day($token)
-{
-    JWTAuth::setToken($token);
-    if (!JWTAuth::check()) {
-        throw new AuthenticationException('Token is invalid or expired');
+    {
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new AuthenticationException('Token is invalid or expired');
+        }
+
+        $user = JWTAuth::user();
+
+        // Check if last_login_at is null or on a different day
+        $today = now()->startOfDay();
+        $lastLoginDay = $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->startOfDay() : null;
+
+        // Nếu đã điểm danh hôm nay, không cho phép điểm danh nữa
+        if ($lastLoginDay && $lastLoginDay->eq($today)) {
+            return ['message' => ('You have checked in today')];
+        }
+
+        // Nếu chưa điểm danh, tăng số ngày học
+        $user->increment('study_day');
+
+        // Update last_login_at to the current timestamp
+        $user->last_login_at = now();
+        $user->save();
+
+        // Tặng điểm theo mốc ngày (dựa trên study_day % 7)
+        $bonusPoints = 0; // 16 mod 
+        $dayInCycle = $user->study_day % 7; // Tính ngày trong chu kỳ 7 ngày
+        if ($dayInCycle == 0) {
+            $dayInCycle = 7; // Nếu là ngày 0, chuyển thành ngày 7
+        }
+
+        switch ($dayInCycle) {
+            case 1:
+                $bonusPoints = 20; // Ngày 1 tặng 20 điểm
+                break;
+            case 1:
+                $bonusPoints = 20; // Ngày 2 tặng 20 điểm
+                break;
+            case 3:
+                $bonusPoints = 30; // Ngày 3 tặng 30 điểm
+                break;
+            case 4:
+                $bonusPoints = 30; // Ngày 3 tặng 30 điểm
+                break;
+            case 5:
+                $bonusPoints = 50; // Ngày 5 tặng 50 điểm
+                break;
+            case 6:
+                $bonusPoints = 50; // Ngày 5 tặng 50 điểm
+                break;
+            case 7:
+                $bonusPoints = 100; // Ngày 7 tặng 100 điểm
+                break;
+        }
+
+        // Cộng điểm thưởng nếu có
+        if ($bonusPoints > 0) {
+            $user->increment('point', $bonusPoints);
+        }
+
+        return ['message' => ('Login successful'), 'day login' => ($dayInCycle)];
     }
+    public function getCheckInDays($token)
+    {
+        JWTAuth::setToken($token);
+        if (!JWTAuth::check()) {
+            throw new AuthenticationException('Token is invalid or expired');
+        }
 
-    $user = JWTAuth::user();
-
-    // Check if last_login_at is null or on a different day
-    $today = now()->startOfDay();
-    $lastLoginDay = $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->startOfDay() : null;
-
-    // Nếu đã điểm danh hôm nay, không cho phép điểm danh nữa
-    if ($lastLoginDay && $lastLoginDay->eq($today)) {
-        return ['message'=>('You have checked in today')];
+        $user = JWTAuth::user();
+        $dayInCycle = $user->study_day % 7;
+        return ['day login' => ($dayInCycle)];
     }
-
-    // Nếu chưa điểm danh, tăng số ngày học
-    $user->increment('study_day');
-
-    // Update last_login_at to the current timestamp
-    $user->last_login_at = now();
-    $user->save();
-
-    // Tặng điểm theo mốc ngày (dựa trên study_day % 7)
-    $bonusPoints = 0;
-    $dayInCycle = $user->study_day % 7; // Tính ngày trong chu kỳ 7 ngày
-    if ($dayInCycle == 0) {
-        $dayInCycle = 7; // Nếu là ngày 0, chuyển thành ngày 7
-    }
-
-    switch ($dayInCycle) {
-        case 1:
-            $bonusPoints = 20; // Ngày 1 tặng 20 điểm
-            break;
-        case 1:
-            $bonusPoints = 20; // Ngày 2 tặng 20 điểm
-            break;
-        case 3:
-            $bonusPoints = 30; // Ngày 3 tặng 30 điểm
-            break;
-        case 4:
-            $bonusPoints = 30; // Ngày 3 tặng 30 điểm
-            break;
-        case 5:
-            $bonusPoints = 50; // Ngày 5 tặng 50 điểm
-            break;
-        case 6:
-            $bonusPoints = 50; // Ngày 5 tặng 50 điểm
-            break;
-        case 7:
-            $bonusPoints = 100; // Ngày 7 tặng 100 điểm
-            break;
-    }
-
-    // Cộng điểm thưởng nếu có
-    if ($bonusPoints > 0) {
-        $user->increment('point', $bonusPoints);
-    }
-
-    return ['message'=>('Login successful')];
-}
     public function updateAvatar($token, $avatar)
     {
         JWTAuth::setToken($token);
@@ -179,7 +190,7 @@ class UserService
 
         // Kiểm tra tên avatar có hợp lệ không (avatar_0 đến avatar_29)
         if (!preg_match('/^avatar_([0-9]|[1-2][0-9])$/', $avatar)) {
-            return ['message'=>('Invalid avatar name')];
+            return ['message' => ('Invalid avatar name')];
         }
 
         // Cập nhật avatar
