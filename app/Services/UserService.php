@@ -75,7 +75,17 @@ class UserService
 
         // Tìm rank của user hiện tại trong danh sách top users
         $rank = $topUsers->firstWhere('username', $user->username)->rank ?? null;
-
+        if (!$rank) {
+            $rank = User::where(function ($query) use ($user) {
+                $query->where('point', '>', $user->point)
+                      ->orWhere(function ($subQuery) use ($user) {
+                          $subQuery->where('point', '=', $user->point)
+                                   ->where('user_id', '<', $user->user_id); // Ưu tiên user có ID nhỏ hơn
+                      });
+            })
+            ->whereIn('role', ['User', 'Guest'])
+            ->count() + 1;
+        }
         return response()->json([
             'user' => [
                 'user_id' => $user->user_id,
