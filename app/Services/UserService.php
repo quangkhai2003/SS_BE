@@ -71,11 +71,10 @@ class UserService
 
         $user = JWTAuth::user();
 
-        // Tính thứ hạng của người dùng
-        $rank = User::where('point', '>', $user->point)
-            ->whereIn('role', ['User', 'Guest'])
-            ->count() + 1;
+        $topUsers = $this->getTopUsers();
 
+        // Tìm rank của user hiện tại trong danh sách top users
+        $rank = $topUsers->firstWhere('username', $user->username)->rank ?? null;
 
         return response()->json([
             'user' => [
@@ -100,10 +99,18 @@ class UserService
     public function getTopUsers()
     {
         // Lấy 50 user có điểm cao nhất, chỉ lấy role là User hoặc Guest
-        return User::whereIn('role', ['User', 'Guest'])
+        $users = User::whereIn('role', ['User', 'Guest'])
             ->orderBy('point', 'desc')
             ->take(50)
-            ->get(['avatar', 'username', 'point']); // Chỉ lấy các cột cần thiết
+            ->get(['avatar', 'username', 'point']);
+
+        // Thêm rank cho từng user
+        $rankedUsers = $users->map(function ($user, $index) {
+            $user->rank = $index + 1; // Rank bắt đầu từ 1
+            return $user;
+        });
+
+        return $rankedUsers;
     }
     public function checkIn7Day($token)
     {
@@ -141,7 +148,7 @@ class UserService
             case 1:
                 $bonusPoints = 20; // Ngày 1 tặng 20 điểm
                 break;
-            case 1:
+            case 2:
                 $bonusPoints = 20; // Ngày 2 tặng 20 điểm
                 break;
             case 3:
