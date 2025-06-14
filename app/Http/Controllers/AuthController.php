@@ -66,6 +66,11 @@ class AuthController extends Controller
         $user = $this->userService->checkIn7Day($request->bearerToken());
         return ($user);
     }
+    public function getCheckInDays(Request $request)
+    {
+        $user = $this->userService->getCheckInDays($request->bearerToken());
+        return ($user);
+    }
     public function updateAvatar(Request $request)
     {
         $user = $this->userService->updateAvatar($request->bearerToken(), $request->avatar);

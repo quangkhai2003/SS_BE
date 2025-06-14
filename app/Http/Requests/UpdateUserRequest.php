@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -23,8 +24,17 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'user_id' => 'required|integer|exists:users,user_id',
-            'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|email|unique:users,email',
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore($this->user_id, 'user_id'),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->user_id, 'user_id'),
+            ],
             'password' => 'required|string|min:8',
             'role' => 'in:User,Guest', // Chỉ cho phép các giá trị hợp lệ
         ];

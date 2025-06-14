@@ -671,4 +671,27 @@ class RoadMapService
             'message' => 'You have opened the mystery chest and earned 50 points!',
         ];
     }
+    public function GetTopicByLevel($levelId)
+    {
+        // Tìm level dựa trên level_id
+        $level = Level::with('progress')->find($levelId);
+
+        // Kiểm tra nếu level không tồn tại
+        if (!$level) {
+            throw new \Exception('Level not found');
+        }
+
+        // Lấy topic từ quan hệ progress
+        $topic = $level->progress->topic_name ?? null;
+
+        // Kiểm tra nếu topic không tồn tại
+        if (!$topic) {
+            throw new \Exception('Topic not found for this level');
+        }
+
+        return [
+            'level_id' => $levelId,
+            'topic' => $topic,
+        ];
+    }
 }

@@ -41,7 +41,8 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('checkrole:User');
     Route::get('/profile', [AuthController::class, 'profile'])->middleware('checkrole:User|Guest');
     Route::get('/leaderboard', [AuthController::class, 'getLeaderboard']);
-//    Route::get('/checkIn7Day', [AuthController::class, 'checkIn7Day'])->middleware('checkrole:User|Guest');
+    Route::get('/checkIn7Day', [AuthController::class, 'checkIn7Day'])->middleware('checkrole:User|Guest');
+    Route::get('/getCheckInDays', [AuthController::class, 'getCheckInDays'])->middleware('checkrole:User|Guest');
     Route::post('/updateAvatar', [AuthController::class, 'updateAvatar'])->middleware('checkrole:User|Guest');
 
     // RoadMapController
@@ -115,9 +116,10 @@ Route::group([
     Route::post('/createProgress', [RoadMapController::class, 'CreateProgress'])->middleware('checkrole:Admin');
     Route::post('/addWordsToLevel', [RoadMapController::class, 'AddWordsToLevel'])->middleware('checkrole:Admin');
     Route::put('/updateProgress', [RoadMapController::class, 'updateProgress'])->middleware('checkrole:Admin');
-    
+    Route::get('/getTopicByLevel', [RoadMapController::class, 'GetTopicByLevel'])->middleware('checkrole:Admin');
     // DictionaryController
     Route::get('/getAllDictionary', [DictionaryController::class, 'getAllDictionary'])->middleware('checkrole:Admin');
     Route::post('/addWordToDictionary', [DictionaryController::class, 'AddWordToDictionary'])->middleware('checkrole:Admin');
     Route::put('/updateWordInDictionary', [DictionaryController::class, 'updateWordInDictionary'])->middleware('checkrole:Admin');
+
 });

@@ -111,5 +111,10 @@ class RoadMapController extends Controller
         $result = $this->levelService->OpenMysteryChest($request->bearerToken(), $request->topic);
         return MessageResources::make($result);
     }
+    public function GetTopicByLevel(Request $request)
+    {
+        $result = $this->levelService->GetTopicByLevel($request->level_id);
+        return ($result);
+    }
 
 }
