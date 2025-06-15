@@ -194,7 +194,7 @@
                     <div class="ml-6">
                         <h3 class="text-xl font-semibold text-sky-primary">Công cụ học tập</h3>
                         <p class="mt-2 text-sky-text text-base">Tải xuống ứng dụng Sky Study để bắt đầu hành trình học tiếng Anh vui nhộn.</p>
-                        <a href="#" class="mt-4 inline-block btn-primary px-6 py-2 text-sky-white rounded-lg font-semibold">Tải ngay</a>
+                            <a href="https://github.com/CaptainZung/SkyStudy_Release/releases/download/v1.0.0/app-release.apk" download class="mt-4 inline-block btn-primary px-6 py-2 text-sky-white rounded-lg font-semibold">Tải ngay</a>
                     </div>
                 </div>
             </div>
