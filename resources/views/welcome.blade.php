@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sky Study</title>
+    <title>SkyStudy</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
@@ -163,7 +163,7 @@
                         <p class="mt-2 text-sky-text">Chuyên gia săn bug cấp S, không lỗi nào thoát khỏi mắt diều hâu.</p>
                     </div>
                     <div class="p-6 bg-sky-bg rounded-xl shadow-soft hover:scale-[1.02] transition-all">
-                        <h4 class="text-lg font-semibold text-sky-primary">LH Dung – “Pixel Witch” 🧙‍♀️</h4>
+                        <h4 class="text-lg font-semibold text-sky-primary">LH Dũng – “Pixel Witch” 🧙‍♀️</h4>
                         <p class="mt-2 text-sky-text">Thiết kế giao diện mượt như nhung, biến ý tưởng thành hình ảnh sống động.</p>
                     </div>
                     <div class="p-6 bg-sky-bg rounded-xl shadow-soft hover:scale-[1.02] transition-all">
