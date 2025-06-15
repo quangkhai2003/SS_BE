@@ -136,9 +136,9 @@
     <!-- Home Section -->
     <section id="home" class="py-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in">
-            <h1 class="text-4xl sm:text-5xl font-bold text-sky-primary leading-tight">Chào mừng đến với Sky Study</h1>
+            <h1 class="text-4xl sm:text-5xl font-bold text-sky-primary leading-tight">Chào mừng đến với SkyStudy</h1>
             <p class="mt-6 text-lg text-sky-text leading-relaxed max-w-2xl mx-auto">
-                Sky Study là ứng dụng học tiếng Anh dành cho trẻ em, được thiết kế sinh động và tương tác để giúp trẻ vừa chơi vừa học. Khám phá những công cụ thú vị để bắt đầu hành trình học tập hiệu quả và vui nhộn!
+                SkyStudy là ứng dụng học tiếng Anh dành cho trẻ em, được thiết kế sinh động và tương tác để giúp trẻ vừa chơi vừa học. Khám phá những công cụ thú vị để bắt đầu hành trình học tập hiệu quả và vui nhộn!
             </p>
             <a href="#download" class="mt-8 inline-block px-8 py-4 btn-primary text-sky-white font-semibold rounded-xl text-lg shadow-soft">Bắt đầu ngay</a>
         </div>
@@ -149,7 +149,7 @@
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
             <h2 class="text-3xl sm:text-4xl font-bold text-sky-primary text-center">Giới thiệu</h2>
             <p class="mt-6 text-lg text-sky-text text-center leading-relaxed max-w-3xl mx-auto">
-                Sky Study được phát triển với mục tiêu mang lại một nền tảng học tiếng Anh tương tác, sinh động và dễ tiếp cận cho trẻ em. Ứng dụng kết hợp giữa công nghệ, giáo dục và thiết kế thân thiện với trẻ, giúp các em học từ vựng và luyện nghe – nói thông qua các trò chơi và bài tập đầy thú vị.
+                SkyStudy được phát triển với mục tiêu mang lại một nền tảng học tiếng Anh tương tác, sinh động và dễ tiếp cận cho trẻ em. Ứng dụng kết hợp giữa công nghệ, giáo dục và thiết kế thân thiện với trẻ, giúp các em học từ vựng và luyện nghe – nói thông qua các trò chơi và bài tập đầy thú vị.
             </p>
             <div class="mt-12">
                 <h3 class="text-2xl font-semibold text-sky-primary text-center mb-8">Thành viên nhóm</h3>
@@ -174,7 +174,7 @@
             </div>
             <div class="mt-12 text-center text-sky-text leading-relaxed max-w-3xl mx-auto">
                 <p>
-                    Chúng em xin chân thành cảm ơn <strong>Thầy Nguyễn Đức Mận</strong> – người đã luôn hướng dẫn tận tình như một "Debugger sống", cùng các anh chị công ty <strong>Kaopiz</strong> – những người đã hỗ trợ và chia sẻ kinh nghiệm quý báu, giúp dự án Sky Study đi từ ý tưởng đến sản phẩm thực tế.
+                    Chúng em xin chân thành cảm ơn <strong>Thầy Nguyễn Đức Mận</strong> – người đã luôn hướng dẫn tận tình như một "Debugger sống", cùng các anh chị công ty <strong>Kaopiz</strong> – những người đã hỗ trợ và chia sẻ kinh nghiệm quý báu, giúp dự án SkyStudy đi từ ý tưởng đến sản phẩm thực tế.
                 </p>
             </div>
         </div>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="ml-6">
                         <h3 class="text-xl font-semibold text-sky-primary">Công cụ học tập</h3>
-                        <p class="mt-2 text-sky-text text-base">Tải xuống ứng dụng Sky Study để bắt đầu hành trình học tiếng Anh vui nhộn.</p>
+                        <p class="mt-2 text-sky-text text-base">Tải xuống ứng dụng SkyStudy để bắt đầu hành trình học tiếng Anh vui nhộn.</p>
                             <a href="https://github.com/CaptainZung/SkyStudy_Release/releases/download/v1.0.0/app-release.apk" download class="mt-4 inline-block btn-primary px-6 py-2 text-sky-white rounded-lg font-semibold">Tải ngay</a>
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                     </svg>
                 </a>
             </div>
-            <p class="text-sm">© 2025 Sky Study. Mọi quyền được bảo lưu.</p>
+            <p class="text-sm">© 2025 SkyStudy. Mọi quyền được bảo lưu.</p>
         </div>
     </footer>
 
