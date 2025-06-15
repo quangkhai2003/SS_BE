@@ -87,7 +87,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <span class="text-2xl font-bold text-sky-primary">Sky Study</span>
+                    <span class="text-2xl font-bold text-sky-primary">SkyStudy</span>
                 </div>
                 <div class="flex items-center space-x-6">
                     <a href="#home" class="nav-link text-sky-text font-semibold text-sm uppercase tracking-wide">Trang chủ</a>
